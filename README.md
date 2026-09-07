@@ -1,75 +1,63 @@
-# React + TypeScript + Vite
+# Portfolio — Brandon
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Portfolio personnel développé avec React et Tailwind CSS.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Stack
 
-## React Compiler
+| Outil | Version | Rôle |
+|---|---|---|
+| [Vite](https://vite.dev/) | ^8 | Bundler / serveur de dev |
+| [React](https://react.dev/) | ^19 | UI |
+| [Tailwind CSS](https://tailwindcss.com/) | ^4 | Styles utilitaires (via plugin Vite) |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Typographies
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+| Usage | Police | Source | Graisses disponibles |
+|---|---|---|---|
+| Titres / Menus | Waukegan LDO | `public/fonts/` (local) | 400, 700, 900 + Oblique |
+| Titres larges | Waukegan LDO Extended | `public/fonts/` (local) | 400, 700, 900 + Oblique |
+| Textes courants | Noto Sans | Google Fonts (`<link>` dans `index.html`) | 100–900 |
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+**Variables CSS disponibles :**
+```css
+--font-heading           /* Waukegan LDO — titres & menus       */
+--font-heading-extended  /* Waukegan LDO Extended — variante     */
+--font-body              /* Noto Sans — textes courants          */
+--font-mono              /* ui-monospace — code                  */
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Composants
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### `DepthLoader`
+Écran de chargement intro style "fond marin / encre bleue", inspiré de l'ambiance du menu pause de Persona 3 Reload.
 
+**Props :**
+| Prop | Type | Défaut | Description |
+|---|---|---|---|
+| `name` | `string` | `"Brandon"` | Nom affiché pendant le chargement |
+| `role` | `string` | `"Développeur full-stack"` | Sous-titre |
+| `durationMs` | `number` | `3200` | Durée de la phase de chargement (ms) |
+| `onFinish` | `function` | `() => {}` | Callback appelé une fois l'écran fermé |
+
+**Fonctionnalités :**
+- Bulles animées qui remontent (26 bulles générées aléatoirement)
+- Caustiques d'eau animées en surface
+- Anneau de progression SVG avec pourcentage
+- Révélation du nom via clip-path animé
+- Transition de fermeture circulaire (wipe)
+
+---
+
+## Développement
+
+```bash
+npm run dev      # Serveur de dev (http://localhost:5173)
+npm run build    # Build de production
+npm run preview  # Aperçu du build
 ```
