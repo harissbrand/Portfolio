@@ -1,16 +1,18 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
+import PS4FlowBackground from './components/PS4FlowBackground'
 import './App.css'
 
 function App() {
   return (
-    <div className="min-h-screen bg-black text-white">
-      <h1 className="text-5xl font-bold">
-        My Portfolio
-      </h1>
-    </div>
+    <>
+      <PS4FlowBackground />
+      <div className="min-h-screen text-white relative">
+        <div className="relative z-10 p-8">
+          <h1 className="text-5xl font-bold">
+            My Portfolio
+          </h1>
+        </div>
+      </div>
+    </>
   )
 }
 
