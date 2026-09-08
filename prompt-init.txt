@@ -1,0 +1,238 @@
+Utilise l'image jointe comme **référence visuelle principale**.  
+  
+Je veux reproduire fidèlement sa **composition, son ambiance et son organisation**, mais sous forme d'une véritable interface web codée en HTML/CSS/JavaScript, et non comme une image ou un simple `background-image`.  
+  
+L'image sert uniquement de référence pour le design.  
+  
+## Direction artistique  
+  
+Créer un portfolio développeur inspiré de l'esthétique du background dynamique de la PS4, sans copier son interface ni ses éléments propriétaires.  
+  
+Le rendu doit être :  
+  
+* sombre ;  
+* minimaliste ;  
+* futuriste ;  
+* premium ;  
+* fluide ;  
+* professionnel.  
+  
+Palette principale :  
+  
+* `#07070F` — background  
+* `#2363EB` — bleu électrique  
+* `#06B6D4` — cyan  
+* `#34D399` — vert émeraude  
+  
+Le fond doit rester majoritairement `#07070F`. Utiliser les trois autres couleurs dans les gradients, glow et accents. Éviter les autres couleurs dominantes.  
+  
+## Composition de la page  
+  
+Reprendre la disposition générale de l'image :  
+  
+### Header  
+  
+Créer un header fin en haut de l'écran.  
+  
+À gauche :  
+  
+**[Mon logo] — Mon Portfolio**  
+  
+Prévoir un emplacement facilement remplaçable pour mon propre logo. Ne pas reproduire le logo PlayStation.  
+  
+Navigation horizontale :  
+  
+**Accueil · À propos · Projets · Compétences · Contact**  
+  
+`Accueil` est actif avec un accent cyan/bleu et une fine ligne lumineuse sous le lien.  
+  
+À droite, prévoir des icônes pour :  
+  
+* recherche ;  
+* paramètres ;  
+* heure actuelle.  
+  
+Utiliser des icônes modernes et originales.  
+  
+### Menu latéral  
+  
+Créer un menu vertical à gauche, comme dans l'image :  
+  
+* Accueil  
+* À propos  
+* Projets  
+* Compétences  
+* Contact  
+  
+Chaque élément possède une icône moderne + son texte.  
+  
+L'élément actif possède :  
+  
+* fond légèrement translucide ;  
+* contour lumineux ;  
+* glow ;  
+* texte clair.  
+  
+Au survol, le menu doit légèrement se déplacer et gagner en luminosité avec une transition fluide.  
+  
+### Hero  
+  
+Placer le contenu principal au centre-gauche, comme sur l'image.  
+  
+Afficher :  
+  
+**BONJOUR, JE SUIS**  
+  
+Puis un grand titre :  
+  
+**Brandon Harison**  
+  
+`Brandon` en blanc et `Harison` avec un gradient `#2363EB → #06B6D4`.  
+  
+Sous le titre :  
+  
+**Développeur passionné, je conçois des solutions web modernes et performantes.**  
+  
+Puis un bouton :  
+  
+**Voir mes projets →**  
+  
+Le bouton possède un contour bleu/cyan, un fond légèrement transparent et un glow subtil.  
+  
+Au survol, il gagne légèrement en luminosité et la flèche se déplace subtilement vers la droite.  
+  
+### Bas de page  
+  
+En bas à gauche :  
+  
+**● En ligne**  
+  
+avec un petit point cyan animé très subtilement.  
+  
+En bas à droite :  
+  
+**X  Valider    O  Retour**  
+  
+Ces éléments doivent rester discrets.  
+  
+## Background dynamique  
+  
+C'est l'élément visuel principal.  
+  
+Reproduire les grandes vagues/rubans lumineux visibles dans l'image avec du **SVG, CSS et/ou Canvas**.  
+  
+Créer plusieurs rubans fluides :  
+  
+* bleu `#2363EB` dominant ;  
+* cyan `#06B6D4` ;  
+* vert `#34D399`.  
+  
+Ils doivent être larges, translucides, organiques et avoir une largeur variable.  
+  
+Ajouter :  
+  
+* gradients ;  
+* plusieurs couches ;  
+* transparence ;  
+* blur ;  
+* glow ;  
+* superposition ;  
+* profondeur ;  
+* luminosité renforcée aux croisements.  
+  
+Les rubans doivent ressembler à des vagues de lumière flottant dans un espace sombre, et non à de simples lignes.  
+  
+## Animation  
+  
+Le background doit être continuellement animé mais très lentement.  
+  
+Les rubans doivent légèrement :  
+  
+* onduler ;  
+* se déplacer ;  
+* modifier leur courbure ;  
+* changer leur luminosité.  
+  
+Le mouvement doit être organique, fluide et presque imperceptible.  
+  
+Ne pas utiliser d'animations rapides ou flashy.  
+  
+## Interaction du curseur  
+  
+Ajouter un petit halo radial autour du curseur, principalement en `#06B6D4`.  
+  
+Le curseur peut influencer très légèrement les éléments proches :  
+  
+* glow ;  
+* particules ;  
+* position des rubans ;  
+* luminosité.  
+  
+L'effet doit être subtil et revenir progressivement à son état normal.  
+  
+Les éléments interactifs doivent également avoir un effet `hover` fluide de **200–400 ms**.  
+  
+## Responsive  
+  
+Conserver cette composition sur desktop.  
+  
+Sur tablette et mobile :  
+  
+* adapter le menu ;  
+* réduire les éléments décoratifs si nécessaire ;  
+* conserver les grandes vagues ;  
+* garder le hero lisible ;  
+* transformer le menu latéral en navigation adaptée au mobile.  
+  
+## Performance  
+  
+Le background doit être réellement généré par le navigateur et rester performant.  
+  
+Privilégier :  
+  
+* SVG/CSS ;  
+* `transform` ;  
+* `opacity` ;  
+* `requestAnimationFrame` si nécessaire ;  
+* événements `pointermove` optimisés ;  
+* GPU acceleration.  
+  
+Implémenter `prefers-reduced-motion`.  
+  
+Créer le background comme un composant indépendant :  
+  
+``  
+  
+Structure suggérée :  
+  
+```text  
+  
+    
+  
+
+  
+    
+    
+    
+  
+```  
+  
+## Consigne finale  
+  
+Analyse précisément l'image avant de coder et reproduis sa **composition visuelle** :  
+  
+* proportions ;  
+* position du header ;  
+* menu latéral ;  
+* position du hero ;  
+* espacements ;  
+* grandes vagues ;  
+* profondeur ;  
+* luminosité.  
+  
+Je veux une **version personnelle de cette interface pour un portfolio**, pas une copie de la PS4.  
+  
+Conserver donc la structure et l'ambiance de l'image, tout en utilisant mon identité, ma palette `#07070F / #2363EB / #06B6D4 / #34D399`, mes propres icônes et mon propre logo.  
+Et les fonts à utiliser seront waukegan-LDO pour les Titres, éléments de mise en avant, identité visuelle et  Noto Sans pour les textes général, menus, navigation
+
+Voir le dossier waukegan-LDO et le fichier fonts.txt pour cela
