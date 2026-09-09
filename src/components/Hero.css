@@ -1,0 +1,174 @@
+/* ── Hero Accueil : centré, texte vivant esprit PS4 ───────────────────
+   Reflet balayant le nom (shine des tuiles PS4), halo respirant du rôle,
+   voile assombri derrière le texte pour un contraste constant
+   même quand une vague lumineuse passe derrière. */
+
+.hero {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10vh 24px 8vh;
+}
+
+/* Voile de contraste : assombrit doucement le fond derrière le texte */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 62% 52% at 50% 56%,
+    rgba(1, 6, 21, 0.62),
+    rgba(1, 6, 21, 0.25) 60%,
+    transparent 75%
+  );
+  pointer-events: none;
+}
+
+.hero__name,
+.hero__role,
+.hero__bio {
+  margin: 0;
+}
+
+.hero__name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(32px, 5.5vw, 64px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  text-shadow:
+    0 0 24px rgba(0, 180, 255, 0.45),
+    0 2px 30px rgba(0, 0, 0, 0.6);
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Reflet qui traverse le nom (si background-clip supporté, sinon blanc) */
+@supports ((background-clip: text) or (-webkit-background-clip: text)) {
+  .hero__name {
+    background: linear-gradient(105deg, #ffffff 42%, #b8ecff 50%, #ffffff 58%);
+    background-size: 220% auto;
+    background-position: 120% center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(0 0 18px rgba(0, 180, 255, 0.35));
+    animation:
+      hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) backwards,
+      hero-sheen 7s ease-in-out 1.4s infinite;
+  }
+}
+
+@keyframes hero-sheen {
+  0%, 58%, 100% { background-position: 120% center; }
+  32% { background-position: -20% center; }
+}
+
+.hero__role {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: clamp(14px, 1.8vw, 19px);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  text-indent: 0.32em;
+  color: #8fe3ff;
+  text-shadow:
+    0 0 12px rgba(0, 240, 255, 0.8),
+    0 0 34px rgba(0, 140, 255, 0.5);
+  animation:
+    hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.12s backwards,
+    hero-role-glow 4.4s ease-in-out 1s infinite;
+}
+
+/* Filets latéraux qui se dessinent (clin d'œil minimal PS4) */
+.hero__role::before,
+.hero__role::after {
+  content: '';
+  height: 1px;
+  width: min(110px, 18vw);
+  animation: hero-line 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s backwards;
+}
+
+.hero__role::before {
+  background: linear-gradient(90deg, transparent, rgba(0, 220, 255, 0.8));
+  transform-origin: right center;
+}
+
+.hero__role::after {
+  background: linear-gradient(90deg, rgba(0, 220, 255, 0.8), transparent);
+  transform-origin: left center;
+}
+
+@keyframes hero-line {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes hero-role-glow {
+  0%, 100% {
+    text-shadow:
+      0 0 12px rgba(0, 240, 255, 0.8),
+      0 0 34px rgba(0, 140, 255, 0.5);
+  }
+  50% {
+    text-shadow:
+      0 0 18px rgba(0, 240, 255, 1),
+      0 0 52px rgba(0, 140, 255, 0.7);
+  }
+}
+
+.hero__bio {
+  margin-top: 22px;
+  max-width: 660px;
+  font-family: var(--font-body);
+  font-size: clamp(15px, 1.7vw, 17px);
+  line-height: 1.7;
+  color: rgba(205, 224, 248, 0.88);
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.7);
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.24s backwards;
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(18px); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.hero ::selection {
+  background: rgba(0, 180, 255, 0.35);
+}
+
+@media (max-width: 640px) {
+  .hero {
+    padding: 12vh 20px 10vh;
+  }
+  .hero__role {
+    letter-spacing: 0.22em;
+    text-indent: 0.22em;
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__name,
+  .hero__role,
+  .hero__bio {
+    animation: none;
+  }
+  .hero__role::before,
+  .hero__role::after {
+    animation: none;
+  }
+}

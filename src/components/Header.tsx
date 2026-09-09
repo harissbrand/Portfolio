@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { UserRound, Briefcase, House, Settings, Mail } from 'lucide-react';
+import { UserRound, Briefcase, Settings, Mail } from 'lucide-react';
 import './Header.css';
 
 interface NavItem {
@@ -13,15 +13,16 @@ const ICON_PROPS = {
   'aria-hidden': true,
 } as const;
 
+/* L'accueil est l'index : pas de bouton, le titre "Accueil" reste
+   affiché par défaut et revient quand on quitte le rail. */
 const NAV_ITEMS: NavItem[] = [
   { id: 'profil', label: 'Profil', icon: <UserRound {...ICON_PROPS} /> },
   { id: 'projets', label: 'Projets', icon: <Briefcase {...ICON_PROPS} /> },
-  { id: 'accueil', label: 'Accueil', icon: <House {...ICON_PROPS} /> },
   { id: 'competences', label: 'Compétences', icon: <Settings {...ICON_PROPS} /> },
   { id: 'contact', label: 'Contact', icon: <Mail {...ICON_PROPS} /> },
 ];
 
-export default function Header() {
+export default function Header({ ready }: { ready: boolean }) {
   const [active, setActive] = useState('accueil');
   const [hovered, setHovered] = useState<string | null>(null);
 
@@ -44,10 +45,9 @@ export default function Header() {
     }
   };
 
-  const focusedItem = NAV_ITEMS[activeIndex] ?? NAV_ITEMS[2];
 
   return (
-    <header className="ps4-header">
+    <header className={`ps4-header${ready ? ' is-ready' : ' is-loading'}`}>
       {/* Halo d'ambiance : même bleu que le glow central du background */}
       <div className="ps4-header__ambience" aria-hidden="true" />
       {/* Arc subtil : le focus actif ne revient que lorsqu'on quitte le rail */}
@@ -87,6 +87,7 @@ export default function Header() {
                 } as React.CSSProperties
               }
               aria-pressed={item.id === active}
+              aria-label={item.label}
               onMouseEnter={() => setHovered(item.id)}
               onFocus={() => setHovered(item.id)}
               onBlur={() => setHovered(null)}
@@ -104,10 +105,6 @@ export default function Header() {
           );
         })}
       </nav>
-      {/* Titre courant façon accueil PS4 ("Bibliothèque d'applications") */}
-      <p className="ps4-header__caption" key={focused} aria-live="polite">
-        {focusedItem.label}
-      </p>
     </header>
   );
 }

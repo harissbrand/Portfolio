@@ -182,3 +182,32 @@
     border-right-color: var(--border);
   }
 }
+
+/* ── Réveil en deux temps, bien visible :
+   1. l'écran noir de chargement s'efface (fondu du Boot, 1.2s),
+   2. l'accueil, d'abord en noir et blanc, prend ses couleurs
+      principales en douceur (démarrage retardé de 0.9s). ── */
+.app {
+  filter: grayscale(1) brightness(0.55);
+}
+
+.app.is-awake {
+  animation: app-awaken 2.2s ease 0.9s both;
+}
+
+@keyframes app-awaken {
+  from {
+    filter: grayscale(1) brightness(0.55);
+  }
+  to {
+    filter: grayscale(0) brightness(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app,
+  .app.is-awake {
+    animation: none;
+    filter: none;
+  }
+}

@@ -42,11 +42,12 @@ export default function PS4FlowBackground() {
     if (!rawCtx) return;
     const ctx: CanvasRenderingContext2D = rawCtx;
 
-    let animationFrameId: number;
+    let animationFrameId = 0;
     let width = window.innerWidth;
     let height = window.innerHeight;
     let time = 0;
     let lastTimestamp = -1;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Mouse coordinates tracking with smooth fluid interpolation
     let mouseX = -1000;
@@ -67,8 +68,8 @@ export default function PS4FlowBackground() {
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('pointerleave', handlePointerLeave);
 
-    // 340 subtle, fine dust specks (poussières) - NO large light balls, calm, small & ethereal
-    const numParticles = 340;
+    // 280 subtle, fine dust specks (poussières) - NO large light balls, calm, small & ethereal
+    const numParticles = 280;
     const particles: RibbonParticle[] = [];
 
     function initParticles() {
@@ -110,9 +111,10 @@ export default function PS4FlowBackground() {
     }
 
     const handleResize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       width = window.innerWidth;
       height = window.innerHeight;
+      // Sobre : mobile en dpr 1, desktop plafonné à 1.25 (~30% de pixels en moins).
+      const dpr = Math.min(window.devicePixelRatio || 1, width < 768 ? 1 : 1.25);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
@@ -694,18 +696,47 @@ export default function PS4FlowBackground() {
       // Fine dust specks tightly hugging the linen waves
       drawDustBatched(false);
 
+      // Sobre : en reduced-motion on fige sur une seule image (zéro boucle).
+      if (!reduceMotion) {
+        animationFrameId = requestAnimationFrame(animate);
+      }
+    };
+
+    const startLoop = () => {
+      if (reduceMotion || animationFrameId) return;
+      lastTimestamp = -1;
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    animate();
+    const stopLoop = () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = 0;
+      }
+    };
+
+    // Pause dès que l'onglet est caché : zéro GPU en arrière-plan.
+    const handleVisibility = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else {
+        startLoop();
+      }
+    };
+
+    if (reduceMotion) {
+      animate(16.7);
+    } else {
+      startLoop();
+    }
+    document.addEventListener('visibilitychange', handleVisibility);
 
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('pointermove', handlePointerMove);
       window.removeEventListener('pointerleave', handlePointerLeave);
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
+      stopLoop();
     };
   }, []);
 
