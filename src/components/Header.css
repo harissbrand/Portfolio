@@ -1,0 +1,404 @@
+/* ── Header XMB : barre tout en haut, rail parfaitement horizontal ─────
+   Palette reprise du canvas : nuit #020d26 / #04163d, royal #0073ff,
+   cyan #00f0ff. Le titre de la section focus s'affiche seul, en grand,
+   au centre de l'écran ; labels discrets sous les icônes (hover/focus).
+   Lenteur fluide calée sur le background, halo néon sur l'icône active. */
+
+.ps4-header {
+  --ps4-night: #020d26;
+  --ps4-abyss: #010615;
+  --ps4-royal: #0073ff;
+  --ps4-deep-glow: rgba(0, 95, 240, 0.32);
+  --ps4-cyan: #00f0ff;
+  --ps4-ice: #d2f5ff;
+  --ps4-line: rgba(100, 185, 255, 0.38);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 14px;
+  pointer-events: none;
+}
+
+/* Arc subtil : fine courbe lumineuse épousant l'alignement des icônes,
+   fondue aux extrémités — remplace le dôme en toute légèreté. */
+.ps4-header__arc {
+  position: absolute;
+  top: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(440px, 92vw);
+  height: auto;
+  overflow: visible;
+  filter: drop-shadow(0 0 4px rgba(0, 200, 255, 0.5));
+  animation: ps4-arc-glow 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ps4-arc-glow {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Halo d'ambiance derrière le rail : répond au glow central du fond */
+.ps4-header__ambience {
+  position: absolute;
+  top: -150px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(760px, 90vw);
+  height: 300px;
+  background: radial-gradient(
+    ellipse 50% 55% at 50% 45%,
+    rgba(0, 95, 240, 0.15),
+    rgba(0, 45, 140, 0.06) 55%,
+    transparent 75%
+  );
+  animation: ps4-ambience 7s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes ps4-ambience {
+  0%, 100% { opacity: 0.75; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.06); }
+}
+
+/* Rail droit, horizontal, centré — icônes resserrées */
+.ps4-header__nav {
+  pointer-events: auto;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(8px, 1.6vw, 18px);
+  padding: 6px 12px;
+}
+
+/* ── Item : entrée en cascade façon démarrage PS4 ── */
+.ps4-nav-item {
+  --drop: 0px;
+  --i: 0;
+  --dim: 1;
+  --dist: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  /* Largeur fixe identique : les longs labels (ex. "Compétences")
+     n'écartent plus les cercles, l'espacement reste uniforme */
+  width: 72px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  opacity: 1;
+  /* Arc + espacement uniforme : transition douce à chaque changement */
+  transform: translateY(var(--drop));
+  animation: ps4-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i) * 70ms) backwards;
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s ease;
+}
+
+@keyframes ps4-enter {
+  from { opacity: 0; transform: translateY(calc(var(--drop) - 16px)) scale(0.85); }
+  to { opacity: 1; transform: translateY(var(--drop)) scale(1); }
+}
+
+.ps4-nav-item.is-focused {
+  z-index: 2;
+}
+
+@keyframes ps4-enter {
+  from { opacity: 0; transform: translateY(-16px) translateX(var(--push)) scale(0.85); }
+  to { opacity: 1; transform: translateY(0) translateX(var(--push)) scale(1); }
+}
+
+.ps4-nav-item:focus {
+  outline: none;
+}
+
+/* Voisins : atténuation progressive avec la distance (focus PS4) */
+.ps4-header__nav:has(.is-focused) .ps4-nav-item:not(.is-focused) {
+  opacity: var(--dim);
+}
+
+/* ── Pastille circulaire : verre doux et accueillant ── */
+.ps4-nav-item__circle {
+  position: relative;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  color: rgba(235, 246, 255, 0.85);
+  background:
+    radial-gradient(circle at 50% 26%, rgba(120, 200, 255, 0.32), rgba(2, 13, 38, 0.55) 72%),
+    rgba(6, 22, 52, 0.55);
+  border: 1.5px solid rgba(140, 205, 255, 0.45);
+  box-shadow:
+    inset 0 2px 8px rgba(255, 255, 255, 0.14),
+    inset 0 -6px 14px rgba(0, 60, 160, 0.28),
+    0 4px 18px rgba(0, 40, 110, 0.35),
+    0 0 0 rgba(0, 240, 255, 0);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  /* Pop souple et arrondi = sensation "sélection PS4" */
+  transition:
+    transform 0.5s cubic-bezier(0.34, 1.45, 0.64, 1),
+    border-color 0.35s ease,
+    box-shadow 0.35s ease,
+    background 0.35s ease,
+    color 0.3s ease,
+    opacity 0.35s ease;
+}
+
+.ps4-nav-item:hover .ps4-nav-item__circle {
+  border-color: rgba(180, 225, 255, 0.7);
+  box-shadow:
+    inset 0 2px 8px rgba(255, 255, 255, 0.18),
+    inset 0 -6px 14px rgba(0, 60, 160, 0.28),
+    0 4px 18px rgba(0, 40, 110, 0.35),
+    0 0 16px rgba(0, 200, 255, 0.35);
+}
+
+/* Reflet balayant la tuile focus (shine des tuiles PS4) */
+.ps4-nav-item__shine {
+  position: absolute;
+  inset: -40%;
+  background: linear-gradient(
+    115deg,
+    transparent 42%,
+    rgba(255, 255, 255, 0.35) 50%,
+    rgba(0, 240, 255, 0.25) 54%,
+    transparent 62%
+  );
+  transform: translateX(-70%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.ps4-nav-item__icon {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  transition: transform 0.5s cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+.ps4-nav-item__icon svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 3px rgba(160, 220, 255, 0.25));
+}
+
+/* Anneau de halo (bordure lumineuse tuile sélectionnée) */
+.ps4-nav-item__ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  border: 1px solid transparent;
+  opacity: 0;
+  transition: opacity 0.35s ease, border-color 0.35s ease;
+  pointer-events: none;
+}
+
+/* Pastille-point sous chaque item : seul le focus s'allume (témoin PS4) */
+.ps4-nav-item__dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(140, 210, 255, 0.35);
+  box-shadow: none;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ── État focus : halo néon doux et enveloppant + zoom contenu ── */
+.ps4-nav-item.is-focused .ps4-nav-item__circle,
+.ps4-nav-item:focus-visible .ps4-nav-item__circle {
+  transform: scale(1.55);
+  color: #ffffff;
+  border-color: rgba(225, 248, 255, 0.9);
+  background:
+    radial-gradient(circle at 50% 28%, rgba(120, 225, 255, 0.55), rgba(6, 42, 125, 0.85) 74%),
+    rgba(6, 28, 72, 0.8);
+  box-shadow:
+    inset 0 3px 10px rgba(255, 255, 255, 0.35),
+    inset 0 -8px 18px rgba(0, 70, 180, 0.35),
+    0 0 10px rgba(220, 248, 255, 0.75),
+    0 0 24px rgba(0, 220, 255, 0.8),
+    0 0 56px rgba(0, 130, 255, 0.65),
+    0 0 110px rgba(0, 115, 255, 0.4);
+  animation: ps4-breathe 4.4s ease-in-out infinite;
+}
+
+.ps4-nav-item.is-focused .ps4-nav-item__shine,
+.ps4-nav-item:focus-visible .ps4-nav-item__shine {
+  opacity: 1;
+  animation: ps4-shine 2.8s ease-in-out infinite;
+}
+
+@keyframes ps4-shine {
+  0% { transform: translateX(-70%); opacity: 0; }
+  25% { opacity: 1; }
+  55%, 100% { transform: translateX(70%); opacity: 0; }
+}
+
+.ps4-nav-item.is-focused .ps4-nav-item__ring,
+.ps4-nav-item:focus-visible .ps4-nav-item__ring {
+  opacity: 1;
+  border-color: rgba(255, 255, 255, 0.75);
+}
+
+.ps4-nav-item.is-focused .ps4-nav-item__icon,
+.ps4-nav-item:focus-visible .ps4-nav-item__icon {
+  transform: scale(1.12);
+}
+
+.ps4-nav-item.is-focused .ps4-nav-item__icon svg,
+.ps4-nav-item:focus-visible .ps4-nav-item__icon svg {
+  filter:
+    drop-shadow(0 0 4px rgba(255, 255, 255, 0.9))
+    drop-shadow(0 0 10px rgba(0, 240, 255, 0.8));
+}
+
+.ps4-nav-item.is-focused .ps4-nav-item__dot,
+.ps4-nav-item:focus-visible .ps4-nav-item__dot {
+  background: var(--ps4-cyan);
+  box-shadow:
+    0 0 8px rgba(0, 240, 255, 0.95),
+    0 0 18px rgba(0, 115, 255, 0.7);
+}
+
+/* Halo "respirant" — période lente calée sur l'ambiance du fond */
+@keyframes ps4-breathe {
+  0%, 100% {
+    box-shadow:
+      inset 0 3px 10px rgba(255, 255, 255, 0.35),
+      inset 0 -8px 18px rgba(0, 70, 180, 0.35),
+      0 0 10px rgba(220, 248, 255, 0.75),
+      0 0 24px rgba(0, 220, 255, 0.8),
+      0 0 56px rgba(0, 130, 255, 0.65),
+      0 0 110px rgba(0, 115, 255, 0.4);
+  }
+  50% {
+    box-shadow:
+      inset 0 3px 12px rgba(255, 255, 255, 0.45),
+      inset 0 -8px 20px rgba(0, 70, 180, 0.4),
+      0 0 12px rgba(230, 250, 255, 0.9),
+      0 0 32px rgba(0, 225, 255, 0.9),
+      0 0 72px rgba(0, 135, 255, 0.75),
+      0 0 130px rgba(0, 115, 255, 0.5);
+  }
+}
+
+/* ── Labels discrets : visibles uniquement au survol / focus ── */
+.ps4-nav-item__label {
+  font-family: var(--font-heading);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  text-align: center;
+  overflow: visible;
+  opacity: 0;
+  transform: translateY(-2px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.ps4-nav-item:hover .ps4-nav-item__label,
+.ps4-nav-item.is-focused .ps4-nav-item__label,
+.ps4-nav-item:focus-visible .ps4-nav-item__label {
+  opacity: 1;
+  transform: translateY(0);
+  text-shadow:
+    0 0 10px rgba(0, 240, 255, 0.9),
+    0 0 26px rgba(0, 140, 255, 0.6);
+}
+
+/* ── Titre courant : nom de la section focus, seul, en grand,
+   au centre de l'écran (façon "Bibliothèque d'applications") ── */
+.ps4-header__caption {
+  position: fixed;
+  top: 44%;
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-heading-extended);
+  font-size: clamp(34px, 6vw, 64px);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.94);
+  text-shadow:
+    0 0 22px rgba(0, 180, 255, 0.5),
+    0 2px 28px rgba(0, 0, 0, 0.55);
+  animation: ps4-caption 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  pointer-events: none;
+}
+
+@keyframes ps4-caption {
+  from { opacity: 0; transform: translateY(12px); filter: blur(5px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .ps4-nav-item {
+    width: 58px;
+  }
+  .ps4-header__arc {
+    top: 22px;
+  }
+  .ps4-header__nav {
+    gap: 10px;
+    padding: 4px 6px;
+  }
+  .ps4-nav-item__circle {
+    width: 46px;
+    height: 46px;
+  }
+  .ps4-nav-item.is-focused .ps4-nav-item__circle,
+  .ps4-nav-item:focus-visible .ps4-nav-item__circle {
+    transform: scale(1.4);
+  }
+  .ps4-nav-item__icon {
+    width: 20px;
+    height: 20px;
+  }
+  .ps4-nav-item__label {
+    font-size: 11px;
+  }
+  .ps4-header__caption {
+    top: 40%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ps4-header__ambience,
+  .ps4-header__arc,
+  .ps4-nav-item {
+    animation: none;
+  }
+  .ps4-nav-item__circle,
+  .ps4-nav-item__icon,
+  .ps4-nav-item__label {
+    transition: none;
+  }
+  .ps4-nav-item.is-focused .ps4-nav-item__circle {
+    animation: none;
+  }
+  .ps4-nav-item__shine {
+    display: none;
+  }
+}

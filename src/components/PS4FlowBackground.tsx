@@ -26,6 +26,9 @@ interface VeilConfig {
   bodyOpacity?: number;
   strandOpacity?: number;
   isReflection?: boolean;
+  // Dimmer ciblé de la crête lumineuse (1 = inchangé). Sert à calmer
+  // un voile trop présent au premier plan sans toucher aux autres.
+  crestOpacity?: number;
 }
 
 export default function PS4FlowBackground() {
@@ -173,6 +176,7 @@ export default function PS4FlowBackground() {
         bodyOpacity = 0.65,
         strandOpacity = 0.16,
         isReflection = false,
+        crestOpacity = 1.0,
       } = config;
 
       const numPts = crest.length;
@@ -263,17 +267,17 @@ export default function PS4FlowBackground() {
 
       // Diffused ambient rim
       ctx.lineWidth = isReflection ? 8.0 : 11.0;
-      ctx.strokeStyle = colorFn(0.5, 0, isReflection ? 0.32 : 0.44);
+      ctx.strokeStyle = colorFn(0.5, 0, (isReflection ? 0.32 : 0.44) * crestOpacity);
       ctx.stroke();
 
       // Silky luminous fold
       ctx.lineWidth = isReflection ? 3.5 : 4.5;
-      ctx.strokeStyle = colorFn(0.5, 0, isReflection ? 0.72 : 0.88);
+      ctx.strokeStyle = colorFn(0.5, 0, (isReflection ? 0.72 : 0.88) * crestOpacity);
       ctx.stroke();
 
       // Soft inner gleam
       ctx.lineWidth = 1.6;
-      ctx.strokeStyle = `rgba(255, 255, 255, ${isReflection ? 0.25 : 0.40})`;
+      ctx.strokeStyle = `rgba(255, 255, 255, ${(isReflection ? 0.25 : 0.40) * crestOpacity})`;
       ctx.stroke();
 
       ctx.restore();
@@ -357,14 +361,16 @@ export default function PS4FlowBackground() {
       ];
       const v1Crest = sampleSpline(v1CrestCtrl, 60);
 
+      // Tombé resserré vers la crête (~55% de l'écart d'origine) : le voile
+      // garde sa courbe et son animation, mais occupe ~2x moins de surface.
       const v1DrapeCtrl: Point[] = [
-        { x: -w * 0.12 + mxOffset, y: h * (0.60 + Math.sin(time * 0.8 + 0.8) * 0.035) + myOffset },
-        { x: w * 0.10 + mxOffset, y: h * (0.44 + Math.cos(time * 0.9 + 0.8) * 0.040) + myOffset },
-        { x: w * 0.30 + mxOffset, y: h * (0.35 + Math.sin(time * 1.1 + 0.8) * 0.040) + myOffset },
-        { x: w * 0.52 + mxOffset, y: h * (0.42 + Math.cos(time * 0.95 + 0.8) * 0.038) + myOffset },
-        { x: w * 0.72 + mxOffset, y: h * (0.58 + Math.sin(time * 1.05 + 0.8) * 0.035) + myOffset },
-        { x: w * 0.92 + mxOffset, y: h * (0.66 + Math.cos(time * 0.85 + 0.8) * 0.030) + myOffset },
-        { x: w * 1.15 + mxOffset, y: h * (0.68 + Math.sin(time * 0.8 + 0.8) * 0.025) + myOffset },
+        { x: -w * 0.12 + mxOffset, y: h * (0.53 + Math.sin(time * 0.8 + 0.8) * 0.035) + myOffset },
+        { x: w * 0.10 + mxOffset, y: h * (0.35 + Math.cos(time * 0.9 + 0.8) * 0.040) + myOffset },
+        { x: w * 0.30 + mxOffset, y: h * (0.26 + Math.sin(time * 1.1 + 0.8) * 0.040) + myOffset },
+        { x: w * 0.52 + mxOffset, y: h * (0.33 + Math.cos(time * 0.95 + 0.8) * 0.038) + myOffset },
+        { x: w * 0.72 + mxOffset, y: h * (0.51 + Math.sin(time * 1.05 + 0.8) * 0.035) + myOffset },
+        { x: w * 0.92 + mxOffset, y: h * (0.615 + Math.cos(time * 0.85 + 0.8) * 0.030) + myOffset },
+        { x: w * 1.15 + mxOffset, y: h * (0.635 + Math.sin(time * 0.8 + 0.8) * 0.025) + myOffset },
       ];
       const v1Drape = sampleSpline(v1DrapeCtrl, 60);
 
@@ -440,30 +446,33 @@ export default function PS4FlowBackground() {
             }
           },
           numStrands: 24,
-          bodyOpacity: 0.60,
+          bodyOpacity: 0.52,
           strandOpacity: 0.18,
           isReflection,
         });
 
-        // Veil 2: Radiant Turquoise/Cyan Wave
+        // Veil 2: Radiant Turquoise/Cyan Wave — atténué : c'est le plus
+        // gros/lumineux et il passe devant le premier plan. Couleurs
+        // désaturées (~-20%), voile + fibres + crête adoucis.
         renderLinenWaveBatched(v2Crest, v2Drape, {
           colorFn: (u, _v, a) => {
             if (u < 0.32) {
               const t = u / 0.32;
-              return `rgba(0, 255, ${Math.round(140 + t * 80)}, ${a})`;
+              return `rgba(0, 210, ${Math.round(150 + t * 60)}, ${a})`;
             } else if (u < 0.65) {
               const t = (u - 0.32) / 0.33;
-              return `rgba(0, ${Math.round(255 - t * 10)}, 255, ${a})`;
+              return `rgba(0, ${Math.round(215 - t * 10)}, 235, ${a})`;
             } else if (u < 0.85) {
-              return `rgba(0, 255, 240, ${a})`;
+              return `rgba(0, 210, 225, ${a})`;
             } else {
               const t = (u - 0.85) / 0.15;
-              return `rgba(0, ${Math.round(245 - t * 35)}, 255, ${a})`;
+              return `rgba(0, ${Math.round(200 - t * 25)}, 235, ${a})`;
             }
           },
-          numStrands: 26,
-          bodyOpacity: 0.66,
-          strandOpacity: 0.20,
+          numStrands: 20,
+          bodyOpacity: 0.42,
+          strandOpacity: 0.12,
+          crestOpacity: 0.65,
           isReflection,
         });
       }
