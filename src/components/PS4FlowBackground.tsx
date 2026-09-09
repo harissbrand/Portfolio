@@ -43,6 +43,7 @@ export default function PS4FlowBackground() {
     let width = window.innerWidth;
     let height = window.innerHeight;
     let time = 0;
+    let lastTimestamp = -1;
 
     // Mouse coordinates tracking with smooth fluid interpolation
     let mouseX = -1000;
@@ -89,8 +90,9 @@ export default function PS4FlowBackground() {
           ribbonId,
           colorType,
           u: 0.03 + Math.random() * 0.94,
-          // Very calm, gentle drift ("moins mobile")
-          speedU: (Math.random() * 0.00010 + 0.00004) * (Math.random() < 0.5 ? 1 : -1),
+          // Very calm, gentle drift — unidirectional so no back-and-forth.
+          // (Bidirectional speeds + edge wrap caused fast rewind streaks.)
+          speedU: Math.random() * 0.00006 + 0.00002,
           offsetDist: (Math.random() - 0.5) * 36,
           offsetDrape: Math.random() * 0.45,
           // Fine subtle dust specks ("plus petites / subtils") - 0.7px to 1.8px
@@ -277,17 +279,25 @@ export default function PS4FlowBackground() {
       ctx.restore();
     }
 
-    const animate = () => {
-      time += 0.012; // Hypnotic, ultra-fluid wave cadence
+    const animate = (timestamp?: number) => {
+      // Frame-rate independent timing (fixes 2x speed on 120/144Hz screens)
+      let dt = 1;
+      if (timestamp !== undefined) {
+        if (lastTimestamp < 0) lastTimestamp = timestamp;
+        dt = Math.min(Math.max((timestamp - lastTimestamp) / 16.666, 0.25), 3);
+        lastTimestamp = timestamp;
+      }
+      time += 0.012 * dt; // Hypnotic, ultra-fluid wave cadence
 
-      // Smooth mouse tracking interpolation
+      // Smooth mouse tracking interpolation (frame-rate independent)
+      const mouseLerp = 1 - Math.pow(1 - 0.08, dt);
       if (targetMouseX !== -1000) {
         if (mouseX === -1000) {
           mouseX = targetMouseX;
           mouseY = targetMouseY;
         } else {
-          mouseX += (targetMouseX - mouseX) * 0.08;
-          mouseY += (targetMouseY - mouseY) * 0.08;
+          mouseX += (targetMouseX - mouseX) * mouseLerp;
+          mouseY += (targetMouseY - mouseY) * mouseLerp;
         }
       } else {
         mouseX = -1000;
@@ -471,32 +481,51 @@ export default function PS4FlowBackground() {
         };
       }
 
+      // Follow smoothing, frame-rate independent (softer = no jitter)
+      const followLerp = 1 - Math.pow(1 - 0.07, dt);
+
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
-        p.u += p.speedU;
-        if (p.u > 0.96) p.u = 0.04;
-        if (p.u < 0.04) p.u = 0.96;
+        p.u += p.speedU * dt;
+        // Edge recycle: snap to the new side instead of sliding across
+        // the whole screen (that slide = the "fast back-and-forth streak").
+        let justWrapped = false;
+        if (p.u > 0.96) {
+          p.u = 0.04;
+          justWrapped = true;
+        }
 
-        let cPt: Point, dPt: Point;
+        let crestPts: Point[], dPt: Point;
         if (p.ribbonId === 1) {
-          cPt = interpolatePoint(v2Crest, p.u);
+          crestPts = v2Crest;
           dPt = interpolatePoint(v2Drape, p.u);
         } else if (p.ribbonId === 0) {
-          cPt = interpolatePoint(v1Crest, p.u);
+          crestPts = v1Crest;
           dPt = interpolatePoint(v1Drape, p.u);
         } else {
-          cPt = interpolatePoint(v3Crest, p.u);
+          crestPts = v3Crest;
           dPt = interpolatePoint(v3Drape, p.u);
         }
+        const cPt = interpolatePoint(crestPts, p.u);
 
         // Base point along fabric fold
         const bx = cPt.x + (dPt.x - cPt.x) * p.offsetDrape;
         const by = cPt.y + (dPt.y - cPt.y) * p.offsetDrape;
 
-        // Normal unit vector perpendicular to wave
-        const tx = dPt.x - cPt.x;
-        const ty = dPt.y - cPt.y;
-        const len = Math.hypot(tx, ty) || 1;
+        // Stable normal from the crest TANGENT (not crest->drape vector).
+        // The old crest->drape vector collapses/flips when the veil pinches,
+        // which made particles jump +/- offsetDist back and forth rapidly.
+        const eps = 0.008;
+        const pA = interpolatePoint(crestPts, Math.max(0.02, p.u - eps));
+        const pB = interpolatePoint(crestPts, Math.min(0.98, p.u + eps));
+        let tx = pB.x - pA.x;
+        let ty = pB.y - pA.y;
+        let len = Math.hypot(tx, ty);
+        if (len < 1) {
+          tx = 1;
+          ty = 0;
+          len = 1;
+        }
         const nx = -ty / len;
         const ny = tx / len;
 
@@ -518,9 +547,13 @@ export default function PS4FlowBackground() {
         if (p.currentX === 0 && p.currentY === 0) {
           p.currentX = targetX;
           p.currentY = targetY;
+        } else if (justWrapped) {
+          // Teleport with the particle: no high-speed slide across the screen
+          p.currentX = targetX;
+          p.currentY = targetY;
         } else {
-          p.currentX += (targetX - p.currentX) * 0.15;
-          p.currentY += (targetY - p.currentY) * 0.15;
+          p.currentX += (targetX - p.currentX) * followLerp;
+          p.currentY += (targetY - p.currentY) * followLerp;
         }
       }
 
