@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserRound, Briefcase, Settings, Mail } from 'lucide-react';
 import './Header.css';
 
@@ -22,9 +22,21 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'contact', label: 'Contact', icon: <Mail {...ICON_PROPS} /> },
 ];
 
-export default function Header({ ready }: { ready: boolean }) {
+export default function Header({
+  ready,
+  onPreview,
+}: {
+  ready: boolean;
+  onPreview?: (label: string | null) => void;
+}) {
   const [active, setActive] = useState('accueil');
   const [hovered, setHovered] = useState<string | null>(null);
+
+  // Connexion visuelle nav → contenu : le hero affiche la section survolée.
+  useEffect(() => {
+    const item = NAV_ITEMS.find((i) => i.id === hovered);
+    onPreview?.(item ? item.label : null);
+  }, [hovered, onPreview]);
 
   // Comme sur PS4 : le survol prévisualise la sélection (zoom + glow),
   // le clic la valide. Au départ, "Accueil" est sélectionné (image 2).

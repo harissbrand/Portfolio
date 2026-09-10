@@ -1,7 +1,7 @@
-/* ── Hero Accueil : centré, texte vivant esprit PS4 ───────────────────
-   Reflet balayant le nom (shine des tuiles PS4), halo respirant du rôle,
-   voile assombri derrière le texte pour un contraste constant
-   même quand une vague lumineuse passe derrière. */
+/* ── Hero Accueil : hiérarchie resserrée, esprit PS4 ───────────────────
+   Brandon Harison → Développeur Full-Stack → proposition → CTA → contexte.
+   Bloc remonté (~45%), halo sombre subtil derrière le texte pour garder
+   les vagues visibles sans sacrifier la lisibilité. */
 
 .hero {
   position: relative;
@@ -12,36 +12,73 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 10vh 24px 8vh;
+  padding: 0 24px 10vh;
 }
 
-/* Voile de contraste : assombrit doucement le fond derrière le texte */
+/* Halo de contraste : radial très subtil, pas de card */
 .hero::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: -1;
   background: radial-gradient(
-    ellipse 62% 52% at 50% 56%,
-    rgba(1, 6, 21, 0.62),
-    rgba(1, 6, 21, 0.25) 60%,
-    transparent 75%
+    ellipse 66% 56% at 50% 52%,
+    rgba(1, 6, 21, 0.66),
+    rgba(1, 6, 21, 0.28) 60%,
+    transparent 76%
   );
   pointer-events: none;
 }
 
 .hero__name,
 .hero__role,
-.hero__bio {
+.hero__bio,
+.hero__ctas,
+.hero__meta {
   margin: 0;
+}
+
+/* Survol nav → aperçu de section (connexion visuelle PS4).
+   Superposé : aucun décalage de mise en page. */
+.hero__title {
+  position: relative;
+}
+
+.hero__eyebrow {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: #8fe3ff;
+  text-shadow:
+    0 0 10px rgba(0, 240, 255, 0.8),
+    0 0 26px rgba(0, 140, 255, 0.55);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.hero__eyebrow:empty {
+  opacity: 0;
+  transform: translateY(5px);
 }
 
 .hero__name {
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: clamp(32px, 5.5vw, 64px);
-  line-height: 1.05;
-  letter-spacing: 0.01em;
+  font-weight: 600;
+  font-size: clamp(30px, 4vw, 52px);
+  line-height: 1.08;
+  letter-spacing: 0.02em;
   color: #ffffff;
   text-shadow:
     0 0 24px rgba(0, 180, 255, 0.45),
@@ -73,42 +110,43 @@
 }
 
 .hero__role {
-  margin-top: 14px;
+  margin-top: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 18px;
+  gap: 14px;
   font-family: var(--font-heading);
   font-weight: 500;
-  font-size: clamp(14px, 1.8vw, 19px);
-  letter-spacing: 0.32em;
+  font-size: clamp(15px, 1.9vw, 20px);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  text-indent: 0.32em;
-  color: #8fe3ff;
+  text-indent: 0.18em;
+  color: #7ed8f2;
   text-shadow:
-    0 0 12px rgba(0, 240, 255, 0.8),
-    0 0 34px rgba(0, 140, 255, 0.5);
+    0 0 6px rgba(0, 220, 255, 0.35),
+    0 0 16px rgba(0, 140, 255, 0.22);
   animation:
     hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.12s backwards,
     hero-role-glow 4.4s ease-in-out 1s infinite;
 }
 
-/* Filets latéraux qui se dessinent (clin d'œil minimal PS4) */
+/* Filets latéraux fins et courts */
 .hero__role::before,
 .hero__role::after {
   content: '';
   height: 1px;
-  width: min(110px, 18vw);
+  width: min(64px, 12vw);
+  opacity: 0.85;
   animation: hero-line 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s backwards;
 }
 
 .hero__role::before {
-  background: linear-gradient(90deg, transparent, rgba(0, 220, 255, 0.8));
+  background: linear-gradient(90deg, transparent, rgba(0, 220, 255, 0.7));
   transform-origin: right center;
 }
 
 .hero__role::after {
-  background: linear-gradient(90deg, rgba(0, 220, 255, 0.8), transparent);
+  background: linear-gradient(90deg, rgba(0, 220, 255, 0.7), transparent);
   transform-origin: left center;
 }
 
@@ -120,25 +158,148 @@
 @keyframes hero-role-glow {
   0%, 100% {
     text-shadow:
-      0 0 12px rgba(0, 240, 255, 0.8),
-      0 0 34px rgba(0, 140, 255, 0.5);
+      0 0 6px rgba(0, 220, 255, 0.35),
+      0 0 16px rgba(0, 140, 255, 0.22);
   }
   50% {
     text-shadow:
-      0 0 18px rgba(0, 240, 255, 1),
-      0 0 52px rgba(0, 140, 255, 0.7);
+      0 0 9px rgba(0, 225, 255, 0.5),
+      0 0 24px rgba(0, 140, 255, 0.3);
   }
 }
 
 .hero__bio {
-  margin-top: 22px;
-  max-width: 660px;
+  margin-top: 20px;
+  max-width: 600px;
   font-family: var(--font-body);
   font-size: clamp(15px, 1.7vw, 17px);
   line-height: 1.7;
-  color: rgba(205, 224, 248, 0.88);
-  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.7);
+  color: rgba(226, 238, 252, 0.94);
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.75);
   animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.24s backwards;
+}
+
+/* ── CTA façon tuiles XMB PS4 : cadre fin lumineux, verre bleu,
+   reflet vitré + bandeau inférieur (cf. tuile sélectionnée) ── */
+.hero__ctas {
+  margin-top: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.34s backwards;
+}
+
+.hero__btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  min-width: 200px;
+  padding: 11px 24px 14px;
+  border-radius: 5px;
+  border: 1px solid rgba(170, 220, 255, 0.5);
+  background:
+    linear-gradient(rgba(140, 210, 255, 0.14), rgba(140, 210, 255, 0.03)),
+    linear-gradient(160deg, rgba(10, 45, 120, 0.85), rgba(3, 14, 40, 0.9));
+  color: #eaf6ff;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+/* Reflet vitré supérieur */
+.hero__btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(255, 255, 255, 0.16), transparent 45%);
+  pointer-events: none;
+}
+
+/* Bandeau inférieur façon "Démarrer" */
+.hero__btn::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 5px;
+  background: linear-gradient(90deg, transparent, rgba(0, 224, 255, 0.9), transparent);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.hero__btn:focus-visible {
+  outline: 2px solid #00f0ff;
+  outline-offset: 3px;
+}
+
+/* Bouton principal = tuile sélectionnée : cadre blanc lumineux + glow */
+.hero__btn--primary {
+  border-color: rgba(230, 250, 255, 0.9);
+  background:
+    linear-gradient(rgba(160, 225, 255, 0.22), rgba(120, 200, 255, 0.05)),
+    linear-gradient(160deg, rgba(0, 110, 230, 0.9), rgba(4, 26, 80, 0.92));
+  box-shadow:
+    inset 0 0 12px rgba(150, 225, 255, 0.2),
+    0 0 6px rgba(255, 255, 255, 0.22),
+    0 0 12px rgba(0, 200, 255, 0.28),
+    0 8px 22px rgba(0, 115, 255, 0.22);
+}
+
+.hero__btn--primary::after {
+  height: 6px;
+  opacity: 1;
+}
+
+.hero__btn--primary:hover {
+  transform: translateY(-2px) scale(1.03);
+  box-shadow:
+    inset 0 0 14px rgba(170, 230, 255, 0.28),
+    0 0 8px rgba(255, 255, 255, 0.3),
+    0 0 18px rgba(0, 220, 255, 0.4),
+    0 12px 28px rgba(0, 115, 255, 0.3);
+}
+
+/* Bouton secondaire = tuile non sélectionnée : verre sombre, cadre mat */
+.hero__btn--ghost:hover {
+  transform: translateY(-2px) scale(1.03);
+  border-color: rgba(210, 240, 255, 0.8);
+  background:
+    linear-gradient(rgba(150, 215, 255, 0.18), rgba(120, 200, 255, 0.04)),
+    linear-gradient(160deg, rgba(8, 40, 110, 0.88), rgba(3, 14, 40, 0.9));
+  box-shadow:
+    inset 0 0 12px rgba(150, 220, 255, 0.2),
+    0 0 18px rgba(0, 200, 255, 0.35),
+    0 10px 30px rgba(0, 115, 255, 0.3);
+}
+
+.hero__btn--ghost:hover::after {
+  opacity: 0.9;
+}
+
+/* ── Contexte discret ── */
+.hero__meta {
+  margin-top: 26px;
+  font-family: var(--font-body);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-indent: 0.16em;
+  text-transform: uppercase;
+  color: rgba(178, 210, 242, 0.55);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.65);
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.44s backwards;
 }
 
 @keyframes hero-rise {
@@ -152,19 +313,26 @@
 
 @media (max-width: 640px) {
   .hero {
-    padding: 12vh 20px 10vh;
+    padding: 0 20px 12vh;
   }
   .hero__role {
-    letter-spacing: 0.22em;
-    text-indent: 0.22em;
-    gap: 12px;
+    gap: 10px;
+  }
+  .hero__ctas {
+    gap: 10px;
+  }
+  .hero__btn {
+    min-width: 170px;
+    padding: 10px 18px 13px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero__name,
   .hero__role,
-  .hero__bio {
+  .hero__bio,
+  .hero__ctas,
+  .hero__meta {
     animation: none;
   }
   .hero__role::before,

@@ -84,10 +84,10 @@
 
 /* ── Variables globales ────────────────────────────────────── */
 :root {
-  /* Polices (SST = police système PS4) */
+  /* Polices : SST (titres & menus, esprit PS4) + Noto Sans (textes courants) */
   --font-heading:          'SST', system-ui, sans-serif;   /* titres & menus */
   --font-heading-extended: 'SST', system-ui, sans-serif;   /* titres larges */
-  --font-body:             'SST', system-ui, sans-serif;   /* textes courants */
+  --font-body:             'Noto Sans', system-ui, sans-serif; /* textes courants */
   --font-mono:             ui-monospace, Consolas, monospace;
 
   /* Base */

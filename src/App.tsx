@@ -7,6 +7,7 @@ import './App.css'
 
 function App() {
   const [ready, setReady] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -42,8 +43,8 @@ function App() {
     <>
       <div className={`app${ready ? ' is-awake' : ''}`}>
         <PS4FlowBackground />
-        <Header ready={ready} />
-        <Hero />
+        <Header ready={ready} onPreview={setPreview} />
+        <Hero preview={preview} />
       </div>
       <Boot ready={ready} />
     </>

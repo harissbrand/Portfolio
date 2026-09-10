@@ -1,16 +1,37 @@
+import { Download } from 'lucide-react';
 import './Hero.css';
 
-export default function Hero() {
+export default function Hero({ preview }: { preview: string | null }) {
   return (
     <main className="hero">
-      <h1 className="hero__name">Brandon Harison</h1>
-      <p className="hero__role">Développeur Full-stack</p>
+      <div className="hero__title">
+        <p className="hero__eyebrow" aria-live="polite">
+          {preview ?? ''}
+        </p>
+        <h1 className="hero__name">Brandon Harison</h1>
+      </div>
+      <p className="hero__role">Développeur Full-Stack</p>
       <p className="hero__bio">
-        Étudiant en Master 1 à l&apos;IT University, développeur curieux et rigoureux,
-        passionné par le développement web et les nouvelles technologies. Je conçois
-        des applications complètes, du backend à l&apos;interface, avec une attention
-        particulière portée à la qualité du code et à l&apos;expérience utilisateur.
+        Je conçois des applications web modernes, du backend à l&apos;interface,
+        avec un focus sur la qualité du code et l&apos;expérience utilisateur.
       </p>
+      <div className="hero__ctas">
+        <a className="hero__btn hero__btn--primary" href="#projets">
+          Voir mes projets
+        </a>
+        <a
+          className="hero__btn hero__btn--ghost"
+          href="/CV-Brandon-Harison.pdf"
+          download="CV-Brandon-Harison.pdf"
+        >
+          <Download size={15} strokeWidth={2} aria-hidden="true" />
+          Télécharger mon CV
+        </a>
+        <a className="hero__btn hero__btn--ghost" href="#contact">
+          Me contacter
+        </a>
+      </div>
+      <p className="hero__meta">Master 1 · IT University</p>
     </main>
   );
 }
