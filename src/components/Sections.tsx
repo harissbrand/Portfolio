@@ -18,22 +18,3 @@ export const SECTION_LABELS: Record<SectionId, string> = {
   contact: 'Contact',
 };
 
-function Shell({
-  eyebrow,
-  title,
-  children,
-}: {
-  eyebrow: string;
-  title: string;
-  children?: React.ReactNode;
-}) {
-  return (
-    <div className="section">
-      <p className="section__eyebrow">{eyebrow}</p>
-      <h2 className="section__title">{title}</h2>
-      <span className="section__rule" aria-hidden="true" />
-      {children}
-    </div>
-  );
-}
-
