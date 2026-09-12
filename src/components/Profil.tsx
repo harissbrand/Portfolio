@@ -12,7 +12,7 @@ import { asset } from '../lib/asset';
 import './Profil.css';
 
 // Portrait détouré (fond transparent) avec halo cyan.
-const PORTRAIT_SRC = asset('Portrait2.png');
+const PORTRAIT_SRC = asset('Portrait.png');
 
 const PARCOURS = [
   {

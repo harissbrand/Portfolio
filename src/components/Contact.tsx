@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { User, Mail, Tag, MessageSquareText, Phone, Send } from 'lucide-react';
 import { asset } from '../lib/asset';
 import './Contact.css';
@@ -34,7 +35,41 @@ const SOCIALS: Social[] = [
   },
 ];
 
+type SendStatus = 'idle' | 'sending' | 'success' | 'error';
+
 export default function Contact() {
+  const [status, setStatus] = useState<SendStatus>('idle');
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (status === 'sending') return;
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    setStatus('sending');
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: '2d313b03-c17c-45be-9c3f-7eb4dbb6631b',
+          name: data.get('name'),
+          email: data.get('email'),
+          subject: data.get('subject'),
+          message: data.get('message'),
+        }),
+      });
+      const result = await response.json();
+      if (result.success) {
+        setStatus('success');
+        form.reset();
+      } else {
+        setStatus('error');
+      }
+    } catch {
+      setStatus('error');
+    }
+  };
+
   return (
     <div className="contact">
       <div className="contact__info">
@@ -85,8 +120,16 @@ export default function Contact() {
       <form
         className="contact__form"
         aria-label="Formulaire de contact"
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit}
       >
+        <input
+          type="checkbox"
+          name="botcheck"
+          tabIndex={-1}
+          autoComplete="off"
+          style={{ display: 'none' }}
+          aria-hidden="true"
+        />
         <div className="contact__form-head">
           <span className="contact__form-icon" aria-hidden="true">
             <Send size={18} strokeWidth={1.8} />
@@ -124,10 +167,24 @@ export default function Contact() {
           </span>
           <textarea name="message" rows={5} placeholder="Votre message..." />
         </label>
-        <button type="submit" className="contact__submit">
+        <button
+          type="submit"
+          className="contact__submit"
+          disabled={status === 'sending'}
+        >
           <Send size={16} strokeWidth={2} aria-hidden="true" />
-          Envoyer
+          {status === 'sending' ? 'Envoi…' : 'Envoyer'}
         </button>
+        {status === 'success' && (
+          <p className="contact__status contact__status--success" role="status">
+            Message envoyé — je te réponds très vite.
+          </p>
+        )}
+        {status === 'error' && (
+          <p className="contact__status contact__status--error" role="alert">
+            Échec de l&apos;envoi — réessaie ou écris-moi directement.
+          </p>
+        )}
       </form>
     </div>
   );
