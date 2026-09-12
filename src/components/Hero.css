@@ -6,28 +6,13 @@
 .hero {
   position: relative;
   z-index: 10;
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   padding: 0 24px 10vh;
-}
-
-/* Halo de contraste : radial très subtil, pas de card */
-.hero::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: radial-gradient(
-    ellipse 66% 56% at 50% 52%,
-    rgba(1, 6, 21, 0.66),
-    rgba(1, 6, 21, 0.28) 60%,
-    transparent 76%
-  );
-  pointer-events: none;
 }
 
 .hero__name,
@@ -193,6 +178,9 @@
 .hero__btn {
   position: relative;
   overflow: hidden;
+  border: 1px solid transparent;
+  cursor: pointer;
+  appearance: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;

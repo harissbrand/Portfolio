@@ -231,16 +231,6 @@
   pointer-events: none;
 }
 
-/* Pastille-point sous chaque item : seul le focus s'allume (témoin PS4) */
-.ps4-nav-item__dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: rgba(140, 210, 255, 0.35);
-  box-shadow: none;
-  transition: background 0.3s ease, box-shadow 0.3s ease;
-}
-
 /* ── État focus : halo néon doux et enveloppant + zoom contenu ── */
 .ps4-nav-item.is-focused .ps4-nav-item__circle,
 .ps4-nav-item:focus-visible .ps4-nav-item__circle {
@@ -288,14 +278,6 @@
   filter:
     drop-shadow(0 0 4px rgba(255, 255, 255, 0.9))
     drop-shadow(0 0 10px rgba(0, 240, 255, 0.8));
-}
-
-.ps4-nav-item.is-focused .ps4-nav-item__dot,
-.ps4-nav-item:focus-visible .ps4-nav-item__dot {
-  background: var(--ps4-cyan);
-  box-shadow:
-    0 0 8px rgba(0, 240, 255, 0.95),
-    0 0 18px rgba(0, 115, 255, 0.7);
 }
 
 /* Halo "respirant" — période lente calée sur l'ambiance du fond */

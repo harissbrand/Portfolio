@@ -1,7 +1,13 @@
 import { Download } from 'lucide-react';
 import './Hero.css';
 
-export default function Hero({ preview }: { preview: string | null }) {
+export default function Hero({
+  preview,
+  onNavigate,
+}: {
+  preview: string | null;
+  onNavigate: (id: 'projets') => void;
+}) {
   return (
     <main className="hero">
       <div className="hero__title">
@@ -16,9 +22,6 @@ export default function Hero({ preview }: { preview: string | null }) {
         avec un focus sur la qualité du code et l&apos;expérience utilisateur.
       </p>
       <div className="hero__ctas">
-        <a className="hero__btn hero__btn--primary" href="#projets">
-          Voir mes projets
-        </a>
         <a
           className="hero__btn hero__btn--ghost"
           href="/CV-Brandon-Harison.pdf"
@@ -27,9 +30,13 @@ export default function Hero({ preview }: { preview: string | null }) {
           <Download size={15} strokeWidth={2} aria-hidden="true" />
           Télécharger mon CV
         </a>
-        <a className="hero__btn hero__btn--ghost" href="#contact">
+        <button
+          type="button"
+          className="hero__btn hero__btn--ghost"
+          onClick={() => onNavigate('contact')}
+        >
           Me contacter
-        </a>
+        </button>
       </div>
       <p className="hero__meta">Master 1 · IT University</p>
     </main>

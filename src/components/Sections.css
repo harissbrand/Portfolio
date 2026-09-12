@@ -1,0 +1,105 @@
+/* ── Deck horizontal plein écran (navigation XMB, zéro scroll) ─────── */
+
+.deck {
+  position: relative;
+  z-index: 10;
+  width: 100vw;
+  height: 100dvh;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.deck__track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.deck__panel {
+  width: 88vw;
+  flex: none;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0.45;
+  transform: scale(0.96);
+  transition:
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.85s ease;
+}
+
+.deck__panel.is-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* ── Coquille de section (squelettes en attente du contenu) ── */
+
+.section {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 24px 8vh;
+}
+
+.section__eyebrow,
+.section__title,
+.section__note {
+  margin: 0;
+}
+
+.section__eyebrow {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-indent: 0.3em;
+  text-transform: uppercase;
+  color: #8fe3ff;
+  text-shadow:
+    0 0 10px rgba(0, 240, 255, 0.7),
+    0 0 26px rgba(0, 140, 255, 0.5);
+}
+
+.section__title {
+  margin-top: 12px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: clamp(34px, 5vw, 60px);
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  text-shadow:
+    0 0 24px rgba(0, 180, 255, 0.4),
+    0 2px 30px rgba(0, 0, 0, 0.6);
+}
+
+.section__rule {
+  margin-top: 18px;
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 224, 255, 0.8), transparent);
+}
+
+.section__note {
+  margin-top: 18px;
+  max-width: 520px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.7;
+  color: rgba(205, 224, 248, 0.72);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deck__track {
+    transition: none;
+  }
+  .deck__track--blur {
+    filter: none;
+  }
+}

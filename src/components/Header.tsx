@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { UserRound, Briefcase, Settings, Mail } from 'lucide-react';
+import { House, UserRound, Briefcase, Settings, Mail } from 'lucide-react';
 import './Header.css';
 
 interface NavItem {
@@ -13,29 +13,33 @@ const ICON_PROPS = {
   'aria-hidden': true,
 } as const;
 
-/* L'accueil est l'index : pas de bouton, le titre "Accueil" reste
-   affiché par défaut et revient quand on quitte le rail. */
+/* Accueil en première position : retour rapide à l'index. */
 const NAV_ITEMS: NavItem[] = [
+  { id: 'accueil', label: 'Accueil', icon: <House {...ICON_PROPS} /> },
   { id: 'profil', label: 'Profil', icon: <UserRound {...ICON_PROPS} /> },
-  { id: 'projets', label: 'Projets', icon: <Briefcase {...ICON_PROPS} /> },
   { id: 'competences', label: 'Compétences', icon: <Settings {...ICON_PROPS} /> },
+  { id: 'projets', label: 'Projets', icon: <Briefcase {...ICON_PROPS} /> },
   { id: 'contact', label: 'Contact', icon: <Mail {...ICON_PROPS} /> },
 ];
 
 export default function Header({
   ready,
+  active,
+  onSelect,
   onPreview,
 }: {
   ready: boolean;
+  active: string;
+  onSelect: (id: string) => void;
   onPreview?: (label: string | null) => void;
 }) {
-  const [active, setActive] = useState('accueil');
   const [hovered, setHovered] = useState<string | null>(null);
 
-  // Connexion visuelle nav → contenu : le hero affiche la section survolée.
+  // Connexion visuelle nav → contenu : le hero affiche la section survolée
+  // (jamais "Accueil" : pas de titre sur l'index).
   useEffect(() => {
     const item = NAV_ITEMS.find((i) => i.id === hovered);
-    onPreview?.(item ? item.label : null);
+    onPreview?.(item && item.id !== 'accueil' ? item.label : null);
   }, [hovered, onPreview]);
 
   // Comme sur PS4 : le survol prévisualise la sélection (zoom + glow),
@@ -47,12 +51,12 @@ export default function Header({
     const idx = NAV_ITEMS.findIndex((i) => i.id === id);
     if (e.key === 'ArrowRight') {
       const next = NAV_ITEMS[(idx + 1) % NAV_ITEMS.length];
-      setActive(next.id);
+      onSelect(next.id);
       document.getElementById(`ps4-nav-${next.id}`)?.focus();
     }
     if (e.key === 'ArrowLeft') {
       const prev = NAV_ITEMS[(idx - 1 + NAV_ITEMS.length) % NAV_ITEMS.length];
-      setActive(prev.id);
+      onSelect(prev.id);
       document.getElementById(`ps4-nav-${prev.id}`)?.focus();
     }
   };
@@ -103,7 +107,7 @@ export default function Header({
               onMouseEnter={() => setHovered(item.id)}
               onFocus={() => setHovered(item.id)}
               onBlur={() => setHovered(null)}
-              onClick={() => setActive(item.id)}
+              onClick={() => onSelect(item.id)}
               onKeyDown={(e) => handleKeyDown(e, item.id)}
             >
               <span className="ps4-nav-item__circle">
@@ -112,7 +116,6 @@ export default function Header({
                 <span className="ps4-nav-item__icon">{item.icon}</span>
               </span>
               <span className="ps4-nav-item__label">{item.label}</span>
-              <span className="ps4-nav-item__dot" aria-hidden="true" />
             </button>
           );
         })}
