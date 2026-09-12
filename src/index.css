@@ -1,7 +1,7 @@
 /* ── SST (police système PS4) — @font-face ─────────────────────── */
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTLight.TTF') format('truetype');
+  src: url('../fonts/SSTLight.TTF') format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTLightIt.TTF') format('truetype');
+  src: url('../fonts/SSTLightIt.TTF') format('truetype');
   font-weight: 300;
   font-style: italic;
   font-display: swap;
@@ -17,7 +17,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTRg.TTF') format('truetype');
+  src: url('../fonts/SSTRg.TTF') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -25,7 +25,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTRgIt.TTF') format('truetype');
+  src: url('../fonts/SSTRgIt.TTF') format('truetype');
   font-weight: 400;
   font-style: italic;
   font-display: swap;
@@ -33,7 +33,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTMedium.TTF') format('truetype');
+  src: url('../fonts/SSTMedium.TTF') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -41,7 +41,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTMediumIt.TTF') format('truetype');
+  src: url('../fonts/SSTMediumIt.TTF') format('truetype');
   font-weight: 500;
   font-style: italic;
   font-display: swap;
@@ -49,7 +49,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTBold.TTF') format('truetype');
+  src: url('../fonts/SSTBold.TTF') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -57,7 +57,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTBoldIt.TTF') format('truetype');
+  src: url('../fonts/SSTBoldIt.TTF') format('truetype');
   font-weight: 700;
   font-style: italic;
   font-display: swap;
@@ -65,7 +65,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTHeavy.TTF') format('truetype');
+  src: url('../fonts/SSTHeavy.TTF') format('truetype');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
@@ -73,7 +73,7 @@
 
 @font-face {
   font-family: 'SST';
-  src: url('/fonts/SSTHeavyIt.TTF') format('truetype');
+  src: url('../fonts/SSTHeavyIt.TTF') format('truetype');
   font-weight: 800;
   font-style: italic;
   font-display: swap;

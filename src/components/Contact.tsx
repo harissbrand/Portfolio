@@ -1,4 +1,5 @@
 import { User, Mail, Tag, MessageSquareText, Phone, Send } from 'lucide-react';
+import { asset } from '../lib/asset';
 import './Contact.css';
 
 interface Social {
@@ -12,24 +13,24 @@ const SOCIALS: Social[] = [
   {
     label: 'Facebook',
     href: 'https://www.facebook.com/ShinShirooo44?locale=fr_FR',
-    logo: '/logos/facebook-original-devicon.svg',
+    logo: asset('logos/facebook-original-devicon.svg'),
   },
   {
     label: 'WhatsApp',
     href: 'https://wa.me/261387857056',
-    logo: '/logos/whatsapp.svg',
+    logo: asset('logos/whatsapp.svg'),
     color: '#2fe07a',
   },
   {
     label: 'GitHub',
     href: 'https://github.com/harissbrand',
-    logo: '/logos/github.svg',
+    logo: asset('logos/github.svg'),
     color: '#f0f6fc',
   },
   {
     label: 'LinkedIn',
     href: 'https://www.linkedin.com/in/brandon-harison-93224827b/',
-    logo: '/logos/linkedin-original-devicon.svg',
+    logo: asset('logos/linkedin-original-devicon.svg'),
   },
 ];
 

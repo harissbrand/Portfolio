@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ArrowUpRight, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { asset } from '../lib/asset';
 import './Projets.css';
 
 interface Project {
@@ -18,17 +19,17 @@ interface Project {
 }
 
 const LOGOS: Record<string, string> = {
-  MongoDB: '/logos/mongodb-original.svg',
-  Express: '/logos/express-original.svg',
-  Angular: '/logos/angular-original.svg',
-  'Node.js': '/logos/nodejs-original.svg',
-  '.NET': '/logos/dotnetcore-original.svg',
-  'SQL Server': '/logos/microsoftsqlserver-plain.svg',
-  React: '/logos/react-original.svg',
-  'C#': '/logos/csharp-original.svg',
-  PostgreSQL: '/logos/postgresql-original.svg',
-  'Cloud Firestore': '/logos/firebase-plain.svg',
-  Docker: '/logos/docker-original.svg',
+  MongoDB: asset('logos/mongodb-original.svg'),
+  Express: asset('logos/express-original.svg'),
+  Angular: asset('logos/angular-original.svg'),
+  'Node.js': asset('logos/nodejs-original.svg'),
+  '.NET': asset('logos/dotnetcore-original.svg'),
+  'SQL Server': asset('logos/microsoftsqlserver-plain.svg'),
+  React: asset('logos/react-original.svg'),
+  'C#': asset('logos/csharp-original.svg'),
+  PostgreSQL: asset('logos/postgresql-original.svg'),
+  'Cloud Firestore': asset('logos/firebase-plain.svg'),
+  Docker: asset('logos/docker-original.svg'),
 };
 
 const PROJECTS: Project[] = [
@@ -42,8 +43,8 @@ const PROJECTS: Project[] = [
       "Site vitrine e-commerce côté client avec backoffice complet pour l'administrateur, profils boutiques, location de box et espaces de vente.",
     accent: '#00e5ff',
     link: 'https://github.com/Tsiory24/m1p13mean-Finoana-Brandon',
-    thumb: '/logos/LOGO-CentreC.png',
-    bg: '/screen/MC1.png',
+    thumb: asset('logos/LOGO-CentreC.png'),
+    bg: asset('screen/MC1.png'),
   },
   {
     id: 'acm',
@@ -54,13 +55,13 @@ const PROJECTS: Project[] = [
     description:
       "Application complète de gestion des inspecteurs de l'Aviation Civile de Madagascar : formations, examens, validité des habilitations, badges avec QR code et affectations de mission.",
     accent: '#3b8bff',
-    bg: '/logos/LOGO-ACM.png',
-    thumb: '/logos/LOGO-ACM.png',
+    bg: asset('logos/LOGO-ACM.png'),
+    thumb: asset('logos/LOGO-ACM.png'),
     shots: [
-      '/screen/ACM1.png',
-      '/screen/ACM2.jpg',
-      '/screen/ACM3.jpg',
-      '/screen/ACM4.jpg',
+      asset('screen/ACM1.png'),
+      asset('screen/ACM2.jpg'),
+      asset('screen/ACM3.jpg'),
+      asset('screen/ACM4.jpg'),
     ],
   },
   {
@@ -73,7 +74,7 @@ const PROJECTS: Project[] = [
       "Simulation en temps réel de la gestion d'une cryptomonnaie : suivi des cours, achat et vente, dépôts et retraits, avec version mobile.",
     accent: '#7c5cff',
     link: 'https://github.com/harissbrand/CloudProject',
-    thumb: '/logos/LOGO-CryptoC.png',
+    thumb: asset('logos/LOGO-CryptoC.png'),
   },
 ];
 

@@ -1,4 +1,5 @@
 import { Download } from 'lucide-react';
+import { asset } from '../lib/asset';
 import './Hero.css';
 
 export default function Hero({
@@ -17,7 +18,7 @@ export default function Hero({
       <div className="hero__ctas">
         <a
           className="hero__btn hero__btn--ghost"
-          href="/CV-Brandon-Harison.pdf"
+          href={asset('CV-Brandon-Harison.pdf')}
           download="CV-Brandon-Harison.pdf"
         >
           <Download size={15} strokeWidth={2} aria-hidden="true" />
