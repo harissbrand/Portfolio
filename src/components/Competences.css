@@ -161,6 +161,28 @@
   height: 32px;
 }
 
+/* Orphelin de dernière rangée : centré */
+.skills__mosaic > :last-child:nth-child(3n + 1) {
+  grid-column: 2;
+}
+
+/* Logos sombres (ex. Express) : inversés sur fond nuit */
+.skills__mosaic img.logo--invert {
+  filter: invert(1) drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
+}
+
+.skills__card.is-left .skills__mosaic img.logo--invert,
+.skills__card.is-right .skills__mosaic img.logo--invert {
+  filter: invert(1) saturate(0.7) drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
+}
+
+.skills__card.is-left:hover .skills__mosaic img.logo--invert,
+.skills__card.is-right:hover .skills__mosaic img.logo--invert,
+.skills__card.is-left:focus-visible .skills__mosaic img.logo--invert,
+.skills__card.is-right:focus-visible .skills__mosaic img.logo--invert {
+  filter: invert(1) drop-shadow(0 3px 10px rgba(0, 0, 0, 0.5));
+}
+
 /* ── Mobile / tablette : colonne verticale centrée et espacée ── */
 @media (max-width: 900px) {
   .skills {

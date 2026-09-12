@@ -44,11 +44,3 @@ export function ProjetsSection() {
     </Shell>
   );
 }
-
-export function ContactSection() {
-  return (
-    <Shell eyebrow="04 · Contact" title="Contact">
-      <p className="section__note">Moyens de contact en cours de préparation.</p>
-    </Shell>
-  );
-}

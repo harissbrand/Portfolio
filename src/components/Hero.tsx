@@ -2,20 +2,13 @@ import { Download } from 'lucide-react';
 import './Hero.css';
 
 export default function Hero({
-  preview,
   onNavigate,
 }: {
-  preview: string | null;
-  onNavigate: (id: 'projets') => void;
+  onNavigate: (id: 'projets' | 'contact') => void;
 }) {
   return (
     <main className="hero">
-      <div className="hero__title">
-        <p className="hero__eyebrow" aria-live="polite">
-          {preview ?? ''}
-        </p>
-        <h1 className="hero__name">Brandon Harison</h1>
-      </div>
+      <h1 className="hero__name">Brandon Harison</h1>
       <p className="hero__role">Développeur Full-Stack</p>
       <p className="hero__bio">
         Je conçois des applications web modernes, du backend à l&apos;interface,

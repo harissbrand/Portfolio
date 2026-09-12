@@ -4,6 +4,8 @@ import './Competences.css';
 interface Skill {
   name: string;
   logos: string[];
+  /** Logo sombre : à inverser pour rester lisible sur fond nuit. */
+  light?: boolean;
 }
 
 interface Folder {
@@ -33,6 +35,7 @@ const FOLDERS: Folder[] = [
     label: 'Frameworks',
     items: [
       { name: 'Spring Boot', logos: ['/logos/spring-original.svg'] },
+      { name: 'Express.js', logos: ['/logos/express-original.svg'], light: true },
       { name: '.NET', logos: ['/logos/dotnetcore-original.svg'] },
       { name: 'React', logos: ['/logos/react-original.svg'] },
       { name: 'Angular', logos: ['/logos/angular-original.svg'] },
@@ -59,6 +62,8 @@ const FOLDERS: Folder[] = [
       { name: 'Docker', logos: ['/logos/docker-original.svg'] },
       { name: 'Postman', logos: ['/logos/postman-original.svg'] },
       { name: 'Swagger', logos: ['/logos/swagger-original.svg'] },
+      { name: 'VS Code', logos: ['/logos/vscode-original.svg'] },
+      { name: 'Cursor', logos: ['/logos/cursor.svg'] },
     ],
   },
 ];
@@ -121,7 +126,13 @@ export default function Competences() {
               {folder.items.map((item) => (
                 <span key={item.name} className="skills__cell">
                   {item.logos.map((src) => (
-                    <img key={src} src={src} alt="" draggable={false} />
+                    <img
+                      key={src}
+                      src={src}
+                      alt=""
+                      draggable={false}
+                      className={item.light ? 'logo--invert' : undefined}
+                    />
                   ))}
                 </span>
               ))}

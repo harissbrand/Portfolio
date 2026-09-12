@@ -5,17 +5,17 @@ import Hero from './components/Hero'
 import Boot from './components/Boot'
 import {
   SECTION_ORDER,
-  ContactSection,
   ProjetsSection,
   type SectionId,
 } from './components/Sections'
 import Profil from './components/Profil'
 import Competences from './components/Competences'
+import Contact from './components/Contact'
+import Footer from './components/Footer'
 import './App.css'
 
 function App() {
   const [ready, setReady] = useState(false);
-  const [preview, setPreview] = useState<string | null>(null);
   const [section, setSection] = useState<SectionId>('accueil');
   const index = SECTION_ORDER.indexOf(section);
 
@@ -200,7 +200,7 @@ function App() {
           ready={ready}
           active={section}
           onSelect={(id) => goTo(id as SectionId)}
-          onPreview={setPreview}
+
         />
         <div
           className="deck"
@@ -216,7 +216,7 @@ function App() {
             style={{ transform: `translateX(calc(${-index * 88}vw + 6vw))` }}
           >
             <div className={`deck__panel${index === 0 ? ' is-active' : ''}`}>
-              <Hero preview={preview} onNavigate={goTo} />
+              <Hero onNavigate={goTo} />
             </div>
             <div className={`deck__panel${index === 1 ? ' is-active' : ''}`}>
               <Profil active={index === 1} />
@@ -228,10 +228,11 @@ function App() {
               <ProjetsSection />
             </div>
             <div className={`deck__panel${index === 4 ? ' is-active' : ''}`}>
-              <ContactSection />
+              <Contact />
             </div>
           </div>
         </div>
+        <Footer />
       </div>
       <Boot ready={ready} />
     </>
