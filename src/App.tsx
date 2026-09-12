@@ -5,12 +5,12 @@ import Hero from './components/Hero'
 import Boot from './components/Boot'
 import {
   SECTION_ORDER,
-  CompetencesSection,
   ContactSection,
   ProjetsSection,
   type SectionId,
 } from './components/Sections'
 import Profil from './components/Profil'
+import Competences from './components/Competences'
 import './App.css'
 
 function App() {
@@ -82,7 +82,16 @@ function App() {
   const deckWidth = () =>
     trackRef.current?.parentElement?.clientWidth ?? window.innerWidth;
 
+  // Le carrousel défile nativement sur mobile : on n'y capte pas le swipe du deck.
+  const skipDrag = useRef(false);
+
   const onTouchStart = (e: React.TouchEvent) => {
+    const target = e.target as HTMLElement | null;
+    if (target && target.closest && target.closest('.skills__stage')) {
+      skipDrag.current = true;
+      return;
+    }
+    skipDrag.current = false;
     const track = trackRef.current;
     if (!track) return;
     const width = deckWidth();
@@ -107,6 +116,7 @@ function App() {
     };
   };
   const onTouchMove = (e: React.TouchEvent) => {
+    if (skipDrag.current) return;
     const current = drag.current;
     const track = trackRef.current;
     if (!current || !current.active || !track) return;
@@ -127,6 +137,10 @@ function App() {
     track.style.transform = `translateX(${pos}px)`;
   };
   const onTouchEnd = () => {
+    if (skipDrag.current) {
+      skipDrag.current = false;
+      return;
+    }
     const current = drag.current;
     const track = trackRef.current;
     drag.current = null;
@@ -208,7 +222,7 @@ function App() {
               <Profil active={index === 1} />
             </div>
             <div className={`deck__panel${index === 2 ? ' is-active' : ''}`}>
-              <CompetencesSection />
+              <Competences />
             </div>
             <div className={`deck__panel${index === 3 ? ' is-active' : ''}`}>
               <ProjetsSection />

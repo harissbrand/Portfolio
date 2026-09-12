@@ -37,14 +37,6 @@ function Shell({
   );
 }
 
-export function CompetencesSection() {
-  return (
-    <Shell eyebrow="02 · Compétences" title="Compétences">
-      <p className="section__note">Panorama technique en cours de préparation.</p>
-    </Shell>
-  );
-}
-
 export function ProjetsSection() {
   return (
     <Shell eyebrow="03 · Projets" title="Projets">

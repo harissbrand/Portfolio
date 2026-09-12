@@ -8,7 +8,7 @@
   align-items: center;
   justify-content: space-between;
   gap: clamp(24px, 4vw, 60px);
-  padding: 96px 3vw calc(4vh + 16px) 6vw;
+  padding: 96px 7vw calc(4vh + 16px) 6vw;
   perspective: 1200px;
 }
 
@@ -225,7 +225,7 @@
   content: '';
   position: absolute;
   top: 50%;
-  height: min(62dvh, 540px);
+  height: min(50dvh, 435px);
   aspect-ratio: 3 / 4;
   transform: translateY(-50%) skewX(6deg);
   border-radius: 4px;
@@ -245,7 +245,7 @@
 .profil__frame {
   position: relative;
   z-index: 1;
-  height: min(62dvh, 540px);
+  height: min(50dvh, 435px);
   aspect-ratio: 3 / 4;
   transform: skewX(6deg);
   border-radius: 4px;
