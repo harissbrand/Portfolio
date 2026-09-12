@@ -37,10 +37,3 @@ function Shell({
   );
 }
 
-export function ProjetsSection() {
-  return (
-    <Shell eyebrow="03 · Projets" title="Projets">
-      <p className="section__note">Sélection de réalisations en cours de préparation.</p>
-    </Shell>
-  );
-}

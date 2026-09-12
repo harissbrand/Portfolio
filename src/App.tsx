@@ -5,12 +5,12 @@ import Hero from './components/Hero'
 import Boot from './components/Boot'
 import {
   SECTION_ORDER,
-  ProjetsSection,
   type SectionId,
 } from './components/Sections'
 import Profil from './components/Profil'
 import Competences from './components/Competences'
 import Contact from './components/Contact'
+import Projets from './components/Projets'
 import Footer from './components/Footer'
 import './App.css'
 
@@ -225,7 +225,7 @@ function App() {
               <Competences />
             </div>
             <div className={`deck__panel${index === 3 ? ' is-active' : ''}`}>
-              <ProjetsSection />
+              <Projets />
             </div>
             <div className={`deck__panel${index === 4 ? ' is-active' : ''}`}>
               <Contact />
