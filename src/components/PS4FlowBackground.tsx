@@ -314,6 +314,14 @@ export default function PS4FlowBackground() {
       const h = height;
       const floorY = h * 0.74;
 
+      // Angle des lignes identique sur mobile et PC : les abscisses des
+      // courbes sont exprimées dans une unité horizontale calibrée sur un
+      // écran PC (~3/2). Sur un écran étroit, l'onde est donc plus large
+      // que l'écran et on en voit la partie centrale — même pente partout.
+      const xUnit = Math.max(w, h * 1.5);
+      const xOff = (w - xUnit) / 2;
+      const X = (f: number) => xOff + xUnit * f;
+
       // 1. Deep nocturnal background gradient
       const bgGrad = ctx.createRadialGradient(
         w * 0.52,
@@ -353,74 +361,74 @@ export default function PS4FlowBackground() {
 
       // 1. Veil 1: The Main Royal Blue Arch (continuous across entire width)
       const v1CrestCtrl: Point[] = [
-        { x: -w * 0.12 + mxOffset, y: h * (0.45 + Math.sin(time * 0.8) * 0.035) + myOffset },
-        { x: w * 0.10 + mxOffset, y: h * (0.24 + Math.cos(time * 0.9) * 0.040) + myOffset },
-        { x: w * 0.30 + mxOffset, y: h * (0.16 + Math.sin(time * 1.1) * 0.035) + myOffset },
-        { x: w * 0.52 + mxOffset, y: h * (0.22 + Math.cos(time * 0.95) * 0.038) + myOffset },
-        { x: w * 0.72 + mxOffset, y: h * (0.42 + Math.sin(time * 1.05) * 0.035) + myOffset },
-        { x: w * 0.92 + mxOffset, y: h * (0.56 + Math.cos(time * 0.85) * 0.030) + myOffset },
-        { x: w * 1.15 + mxOffset, y: h * (0.58 + Math.sin(time * 0.8) * 0.025) + myOffset },
+        { x: X(-0.12) + mxOffset, y: h * (0.45 + Math.sin(time * 0.8) * 0.035) + myOffset },
+        { x: X(0.10) + mxOffset, y: h * (0.24 + Math.cos(time * 0.9) * 0.040) + myOffset },
+        { x: X(0.30) + mxOffset, y: h * (0.16 + Math.sin(time * 1.1) * 0.035) + myOffset },
+        { x: X(0.52) + mxOffset, y: h * (0.22 + Math.cos(time * 0.95) * 0.038) + myOffset },
+        { x: X(0.72) + mxOffset, y: h * (0.42 + Math.sin(time * 1.05) * 0.035) + myOffset },
+        { x: X(0.92) + mxOffset, y: h * (0.56 + Math.cos(time * 0.85) * 0.030) + myOffset },
+        { x: X(1.15) + mxOffset, y: h * (0.58 + Math.sin(time * 0.8) * 0.025) + myOffset },
       ];
       const v1Crest = sampleSpline(v1CrestCtrl, 60);
 
       // Tombé resserré vers la crête (~55% de l'écart d'origine) : le voile
       // garde sa courbe et son animation, mais occupe ~2x moins de surface.
       const v1DrapeCtrl: Point[] = [
-        { x: -w * 0.12 + mxOffset, y: h * (0.53 + Math.sin(time * 0.8 + 0.8) * 0.035) + myOffset },
-        { x: w * 0.10 + mxOffset, y: h * (0.35 + Math.cos(time * 0.9 + 0.8) * 0.040) + myOffset },
-        { x: w * 0.30 + mxOffset, y: h * (0.26 + Math.sin(time * 1.1 + 0.8) * 0.040) + myOffset },
-        { x: w * 0.52 + mxOffset, y: h * (0.33 + Math.cos(time * 0.95 + 0.8) * 0.038) + myOffset },
-        { x: w * 0.72 + mxOffset, y: h * (0.51 + Math.sin(time * 1.05 + 0.8) * 0.035) + myOffset },
-        { x: w * 0.92 + mxOffset, y: h * (0.615 + Math.cos(time * 0.85 + 0.8) * 0.030) + myOffset },
-        { x: w * 1.15 + mxOffset, y: h * (0.635 + Math.sin(time * 0.8 + 0.8) * 0.025) + myOffset },
+        { x: X(-0.12) + mxOffset, y: h * (0.53 + Math.sin(time * 0.8 + 0.8) * 0.035) + myOffset },
+        { x: X(0.10) + mxOffset, y: h * (0.35 + Math.cos(time * 0.9 + 0.8) * 0.040) + myOffset },
+        { x: X(0.30) + mxOffset, y: h * (0.26 + Math.sin(time * 1.1 + 0.8) * 0.040) + myOffset },
+        { x: X(0.52) + mxOffset, y: h * (0.33 + Math.cos(time * 0.95 + 0.8) * 0.038) + myOffset },
+        { x: X(0.72) + mxOffset, y: h * (0.51 + Math.sin(time * 1.05 + 0.8) * 0.035) + myOffset },
+        { x: X(0.92) + mxOffset, y: h * (0.615 + Math.cos(time * 0.85 + 0.8) * 0.030) + myOffset },
+        { x: X(1.15) + mxOffset, y: h * (0.635 + Math.sin(time * 0.8 + 0.8) * 0.025) + myOffset },
       ];
       const v1Drape = sampleSpline(v1DrapeCtrl, 60);
 
       // 2. Veil 2: The Radiant Emerald/Mint-to-Cyan Wave (smooth parabolic dip, ascending up right!)
       const v2CrestCtrl: Point[] = [
-        { x: w * 1.12 - mxOffset, y: h * (0.02 + Math.sin(time * 0.9 + 1.2) * 0.030) - myOffset },
-        { x: w * 0.92 - mxOffset, y: h * (0.17 + Math.cos(time * 1.0 + 1.2) * 0.035) - myOffset },
-        { x: w * 0.78 - mxOffset, y: h * (0.32 + Math.sin(time * 1.1 + 1.2) * 0.038) - myOffset },
-        { x: w * 0.64 - mxOffset, y: h * (0.48 + Math.cos(time * 0.95 + 1.2) * 0.035) - myOffset },
-        { x: w * 0.46 - mxOffset, y: h * (0.66 + Math.sin(time * 1.0 + 2.0) * 0.025) - myOffset },
-        { x: w * 0.28 - mxOffset, y: h * (0.63 + Math.cos(time * 0.9 + 2.0) * 0.028) - myOffset },
-        { x: w * 0.12 - mxOffset, y: h * (0.56 + Math.sin(time * 0.8 + 2.0) * 0.032) - myOffset },
-        { x: -w * 0.12 - mxOffset, y: h * (0.46 + Math.cos(time * 0.85 + 2.0) * 0.035) - myOffset },
+        { x: X(1.12) - mxOffset, y: h * (0.02 + Math.sin(time * 0.9 + 1.2) * 0.030) - myOffset },
+        { x: X(0.92) - mxOffset, y: h * (0.17 + Math.cos(time * 1.0 + 1.2) * 0.035) - myOffset },
+        { x: X(0.78) - mxOffset, y: h * (0.32 + Math.sin(time * 1.1 + 1.2) * 0.038) - myOffset },
+        { x: X(0.64) - mxOffset, y: h * (0.48 + Math.cos(time * 0.95 + 1.2) * 0.035) - myOffset },
+        { x: X(0.46) - mxOffset, y: h * (0.66 + Math.sin(time * 1.0 + 2.0) * 0.025) - myOffset },
+        { x: X(0.28) - mxOffset, y: h * (0.63 + Math.cos(time * 0.9 + 2.0) * 0.028) - myOffset },
+        { x: X(0.12) - mxOffset, y: h * (0.56 + Math.sin(time * 0.8 + 2.0) * 0.032) - myOffset },
+        { x: X(-0.12) - mxOffset, y: h * (0.46 + Math.cos(time * 0.85 + 2.0) * 0.035) - myOffset },
       ];
       const v2Crest = sampleSpline(v2CrestCtrl, 65);
 
       const v2DrapeCtrl: Point[] = [
-        { x: w * 1.15 - mxOffset, y: -h * 0.06 + Math.sin(time * 0.9 + 1.8) * 25 },
-        { x: w * 1.00 - mxOffset, y: h * (0.06 + Math.cos(time * 1.0 + 1.8) * 0.035) - myOffset },
-        { x: w * 0.86 - mxOffset, y: h * (0.22 + Math.sin(time * 1.1 + 1.8) * 0.038) - myOffset },
-        { x: w * 0.72 - mxOffset, y: h * (0.40 + Math.cos(time * 0.95 + 1.8) * 0.035) - myOffset },
-        { x: w * 0.52 - mxOffset, y: h * (0.58 + Math.sin(time * 1.0 + 2.5) * 0.028) - myOffset },
-        { x: w * 0.32 - mxOffset, y: h * (0.66 + Math.cos(time * 0.9 + 2.5) * 0.028) - myOffset },
-        { x: w * 0.12 - mxOffset, y: h * (0.60 + Math.sin(time * 0.8 + 2.5) * 0.032) - myOffset },
-        { x: -w * 0.12 - mxOffset, y: h * (0.48 + Math.cos(time * 0.85 + 2.5) * 0.035) - myOffset },
+        { x: X(1.15) - mxOffset, y: -h * 0.06 + Math.sin(time * 0.9 + 1.8) * 25 },
+        { x: X(1.00) - mxOffset, y: h * (0.06 + Math.cos(time * 1.0 + 1.8) * 0.035) - myOffset },
+        { x: X(0.86) - mxOffset, y: h * (0.22 + Math.sin(time * 1.1 + 1.8) * 0.038) - myOffset },
+        { x: X(0.72) - mxOffset, y: h * (0.40 + Math.cos(time * 0.95 + 1.8) * 0.035) - myOffset },
+        { x: X(0.52) - mxOffset, y: h * (0.58 + Math.sin(time * 1.0 + 2.5) * 0.028) - myOffset },
+        { x: X(0.32) - mxOffset, y: h * (0.66 + Math.cos(time * 0.9 + 2.5) * 0.028) - myOffset },
+        { x: X(0.12) - mxOffset, y: h * (0.60 + Math.sin(time * 0.8 + 2.5) * 0.032) - myOffset },
+        { x: X(-0.12) - mxOffset, y: h * (0.48 + Math.cos(time * 0.85 + 2.5) * 0.035) - myOffset },
       ];
       const v2Drape = sampleSpline(v2DrapeCtrl, 65);
 
       // 3. Veil 3: The Full-Width Lower Royal Blue Ribbon (CONTINUES ACROSS ENTIRE SCREEN TO THE RIGHT!)
       const v3CrestCtrl: Point[] = [
-        { x: -w * 0.12, y: h * (0.50 + Math.sin(time * 0.75 + 2.5) * 0.028) },
-        { x: w * 0.08, y: h * (0.58 + Math.cos(time * 0.85 + 2.5) * 0.028) },
-        { x: w * 0.28, y: h * (0.66 + Math.sin(time * 0.95 + 2.5) * 0.025) },
-        { x: w * 0.48, y: h * (0.71 + Math.cos(time * 0.8 + 2.5) * 0.020) },
-        { x: w * 0.68, y: h * (0.72 + Math.sin(time * 0.85 + 2.5) * 0.020) },
-        { x: w * 0.90, y: h * (0.68 + Math.cos(time * 0.8 + 2.5) * 0.025) },
-        { x: w * 1.15, y: h * (0.60 + Math.sin(time * 0.8 + 2.5) * 0.028) },
+        { x: X(-0.12), y: h * (0.50 + Math.sin(time * 0.75 + 2.5) * 0.028) },
+        { x: X(0.08), y: h * (0.58 + Math.cos(time * 0.85 + 2.5) * 0.028) },
+        { x: X(0.28), y: h * (0.66 + Math.sin(time * 0.95 + 2.5) * 0.025) },
+        { x: X(0.48), y: h * (0.71 + Math.cos(time * 0.8 + 2.5) * 0.020) },
+        { x: X(0.68), y: h * (0.72 + Math.sin(time * 0.85 + 2.5) * 0.020) },
+        { x: X(0.90), y: h * (0.68 + Math.cos(time * 0.8 + 2.5) * 0.025) },
+        { x: X(1.15), y: h * (0.60 + Math.sin(time * 0.8 + 2.5) * 0.028) },
       ];
       const v3Crest = sampleSpline(v3CrestCtrl, 60);
 
       const v3DrapeCtrl: Point[] = [
-        { x: -w * 0.12, y: h * (0.56 + Math.sin(time * 0.75 + 3.2) * 0.028) },
-        { x: w * 0.08, y: h * (0.66 + Math.cos(time * 0.85 + 3.2) * 0.028) },
-        { x: w * 0.28, y: h * (0.74 + Math.sin(time * 0.95 + 3.2) * 0.025) },
-        { x: w * 0.48, y: h * (0.77 + Math.cos(time * 0.8 + 3.2) * 0.020) },
-        { x: w * 0.68, y: h * (0.78 + Math.sin(time * 0.85 + 3.2) * 0.020) },
-        { x: w * 0.90, y: h * (0.74 + Math.cos(time * 0.8 + 3.2) * 0.025) },
-        { x: w * 1.15, y: h * (0.66 + Math.sin(time * 0.8 + 3.2) * 0.028) },
+        { x: X(-0.12), y: h * (0.56 + Math.sin(time * 0.75 + 3.2) * 0.028) },
+        { x: X(0.08), y: h * (0.66 + Math.cos(time * 0.85 + 3.2) * 0.028) },
+        { x: X(0.28), y: h * (0.74 + Math.sin(time * 0.95 + 3.2) * 0.025) },
+        { x: X(0.48), y: h * (0.77 + Math.cos(time * 0.8 + 3.2) * 0.020) },
+        { x: X(0.68), y: h * (0.78 + Math.sin(time * 0.85 + 3.2) * 0.020) },
+        { x: X(0.90), y: h * (0.74 + Math.cos(time * 0.8 + 3.2) * 0.025) },
+        { x: X(1.15), y: h * (0.66 + Math.sin(time * 0.8 + 3.2) * 0.028) },
       ];
       const v3Drape = sampleSpline(v3DrapeCtrl, 60);
 

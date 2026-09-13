@@ -67,12 +67,17 @@ function App() {
   const drag = useRef<{
     active: boolean;
     startX: number;
+    startY: number;
     baseX: number;
     width: number;
     lastX: number;
+    lastY: number;
     lastT: number;
     prevX: number;
+    prevY: number;
     prevT: number;
+    /** 0 = direction indécise, 1 = horizontal (changement de section), 2 = vertical (scroll contenu). */
+    dir: 0 | 1 | 2;
   } | null>(null);
 
   useEffect(() => {
@@ -103,16 +108,22 @@ function App() {
     const baseX = Number.isFinite(live)
       ? live
       : -SECTION_ORDER.indexOf(sectionRef.current) * width;
-    track.style.transition = 'none';
+    // La direction se décide au mouvement : on ne fige la transition et ne
+    // touche au transform qu'une fois le geste horizontal confirmé, pour
+    // laisser le scroll vertical natif tranquille.
     drag.current = {
       active: true,
       startX: touch.clientX,
+      startY: touch.clientY,
       baseX,
       width,
       lastX: touch.clientX,
+      lastY: touch.clientY,
       lastT: now,
       prevX: touch.clientX,
+      prevY: touch.clientY,
       prevT: now,
+      dir: 0,
     };
   };
   const onTouchMove = (e: React.TouchEvent) => {
@@ -124,8 +135,25 @@ function App() {
     const now = performance.now();
     current.prevX = current.lastX;
     current.prevT = current.lastT;
+    current.prevY = current.lastY;
     current.lastX = touch.clientX;
+    current.lastY = touch.clientY;
     current.lastT = now;
+    // Verrou de direction : le premier axe qui dépasse le seuil gagne.
+    // Scroll vertical (contenu) → on ignore le geste, le deck ne bouge pas.
+    if (current.dir === 0) {
+      const dx = Math.abs(touch.clientX - current.startX);
+      const dy = Math.abs(touch.clientY - current.startY);
+      const SLOP = 14;
+      if (Math.max(dx, dy) < SLOP) return;
+      if (dy >= dx) {
+        current.dir = 2;
+        return;
+      }
+      current.dir = 1;
+      track.style.transition = 'none';
+    }
+    if (current.dir === 2) return;
     // Panneaux à 88vw centrés : gouttière de 6vw de chaque côté (peek).
     const panel = PANEL_RATIO * current.width;
     const gutter = (current.width - panel) / 2;
@@ -145,6 +173,11 @@ function App() {
     const track = trackRef.current;
     drag.current = null;
     if (!current || !current.active || !track) return;
+    // Geste vertical ou simple tap : le deck n'a pas bougé, on ne touche à rien.
+    if (current.dir !== 1) {
+      track.style.transition = '';
+      return;
+    }
     const dx = current.lastX - current.startX;
     const dt = Math.max(current.lastT - current.prevT, 1);
     const velocity = (current.lastX - current.prevX) / dt; // px/ms
