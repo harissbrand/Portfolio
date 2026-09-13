@@ -7,7 +7,7 @@
   align-items: center;
   justify-content: center;
   gap: clamp(28px, 5vw, 80px);
-  padding: 100px 5vw 4vh;
+  padding: 96px 5vw 4vh;
 }
 
 /* ── Colonne infos ── */
@@ -15,7 +15,6 @@
   max-width: 560px;
   min-width: 0;
   text-align: left;
-  transform: translateY(-2vh);
 }
 
 .contact__title {
@@ -208,7 +207,7 @@
 
 .contact__row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 
@@ -253,6 +252,33 @@
 .contact__field input::placeholder,
 .contact__field textarea::placeholder {
   color: rgba(165, 200, 235, 0.55);
+}
+
+/* ── Autofill navigateur (Chrome/Edge/Safari/Firefox) : l'input reste
+    transparent pour montrer exactement le fond du champ parent
+    (rgba(2,10,30,0.55)), pas de couleur approximative ── */
+.contact__field input:-webkit-autofill,
+.contact__field input:-webkit-autofill:hover,
+.contact__field input:-webkit-autofill:focus,
+.contact__field input:-webkit-autofill:active,
+.contact__field textarea:-webkit-autofill,
+.contact__field textarea:-webkit-autofill:hover,
+.contact__field textarea:-webkit-autofill:focus {
+  -webkit-text-fill-color: #eef6ff;
+  caret-color: #eef6ff;
+  -webkit-box-shadow: 0 0 0 1000px transparent inset;
+  box-shadow: 0 0 0 1000px transparent inset;
+  background-color: transparent !important;
+  background-image: none !important;
+  transition: background-color 9999s ease-in-out 0s, color 9999s ease-in-out 0s;
+}
+
+.contact__field input:-moz-autofill,
+.contact__field textarea:-moz-autofill {
+  box-shadow: 0 0 0 1000px transparent inset;
+  background-color: transparent !important;
+  -moz-text-fill-color: #eef6ff;
+  color: #eef6ff;
 }
 
 .contact__field--area {
@@ -340,6 +366,7 @@
     min-height: 100%;
     flex-direction: column;
     justify-content: flex-start;
+    align-items: center;
     gap: 26px;
     padding: 118px 20px 6vh;
   }
@@ -347,6 +374,7 @@
   .contact__info {
     transform: none;
     text-align: center;
+    margin: 0 auto;
   }
 
   .contact__direct {
@@ -355,6 +383,10 @@
 
   .contact__socials {
     justify-content: center;
+  }
+
+  .contact__form {
+    margin: 0 auto;
   }
 }
 
@@ -365,12 +397,14 @@
     min-height: 100%;
     flex-direction: column;
     justify-content: flex-start;
+    align-items: center;
     gap: 26px;
     padding: 118px 20px 6vh;
   }
 
   .contact__info {
     text-align: center;
+    margin: 0 auto;
   }
 
   .contact__eyebrow {
@@ -394,6 +428,10 @@
 
   .contact__row {
     grid-template-columns: 1fr;
+  }
+
+  .contact__form {
+    margin: 0 auto;
   }
 }
 

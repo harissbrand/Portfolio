@@ -4,10 +4,10 @@
 .projets {
   height: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   gap: clamp(24px, 4vw, 60px);
-  padding: 190px 5vw 4vh;
+  padding: 96px 5vw 4vh;
 }
 
 /* ── Colonne intro : départ commun, légèrement descendue ── */
@@ -389,9 +389,8 @@ button.projets__shot:focus-visible {
   flex-direction: column;
   min-height: 0;
   max-height: 100%;
-  /* Au niveau du contenu de la carte, pas de sa bordure */
-  align-self: flex-start;
-  padding-top: 22px;
+  /* Centré verticalement avec le reste du contenu */
+  align-self: center;
   margin-left: clamp(10px, 1vw, 16px);
 }
 
@@ -646,13 +645,18 @@ button.projets__shot:focus-visible {
   color: #7ed8f2;
 }
 
-/* ── Mobile : colonne, défilement vertical local si besoin ── */
+/* ── Mobile : colonne centrée, défilement vertical local si besoin ── */
 @media (max-width: 900px) {
+  .deck__panel {
+    overflow-y: auto;
+  }
+
   .projets {
     height: auto;
     min-height: 100%;
     flex-direction: column;
     justify-content: flex-start;
+    align-items: center;
     gap: 22px;
     padding: 118px 20px 6vh;
   }
@@ -660,18 +664,22 @@ button.projets__shot:focus-visible {
   .projets__intro {
     width: 100%;
     max-width: 540px;
+    margin: 0 auto;
     text-align: center;
   }
 
   .projets__main {
     width: 100%;
     max-width: 540px;
+    margin: 0 auto;
   }
 
   .projets__list-wrap {
     width: 100%;
     max-width: 540px;
     max-height: 300px;
+    margin: 0 auto;
+    align-self: center;
   }
 
   .projets__shots {

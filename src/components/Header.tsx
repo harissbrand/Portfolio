@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { House, UserRound, Briefcase, Settings, Mail } from 'lucide-react';
 import './Header.css';
 
@@ -32,6 +32,13 @@ export default function Header({
   onSelect: (id: string) => void;
 }) {
   const [hovered, setHovered] = useState<string | null>(null);
+
+  // Sur mobile le bouton garde le focus après le tap : sans reset,
+  // `hovered` resterait figé sur l'option cliquée et le menu ne
+  // suivrait plus le slide. On resynchronise à chaque changement.
+  useEffect(() => {
+    setHovered(null);
+  }, [active]);
 
   // Comme sur PS4 : le survol prévisualise la sélection (zoom + glow),
   // le clic la valide. Au départ, "Accueil" est sélectionné (image 2).
@@ -98,7 +105,12 @@ export default function Header({
               onMouseEnter={() => setHovered(item.id)}
               onFocus={() => setHovered(item.id)}
               onBlur={() => setHovered(null)}
-              onClick={() => onSelect(item.id)}
+              onClick={(e) => {
+                setHovered(null);
+                onSelect(item.id);
+                // Libère le focus (mobile) pour ne pas rester figé dessus.
+                e.currentTarget.blur();
+              }}
               onKeyDown={(e) => handleKeyDown(e, item.id)}
             >
               <span className="ps4-nav-item__circle">
