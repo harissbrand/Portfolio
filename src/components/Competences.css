@@ -214,6 +214,12 @@
     padding: 22px 20px 24px;
     margin: 0;
     -webkit-box-reflect: none;
+    /* Perf mobile : pas de blur recomposé sur le canvas animé. */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background:
+      linear-gradient(rgba(140, 210, 255, 0.08), rgba(140, 210, 255, 0.02)),
+      linear-gradient(160deg, rgba(8, 36, 100, 0.94), rgba(2, 12, 34, 0.96));
   }
 
   .skills__card-title {

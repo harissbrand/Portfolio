@@ -13,7 +13,9 @@
   display: flex;
   height: 100%;
   transition: transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform;
+  /* Pas de will-change permanent : une couche GPU pour tout le deck
+     coûte cher en mémoire ; le navigateur la promeut pendant la
+     transition de toute façon. */
 }
 
 .deck__panel {

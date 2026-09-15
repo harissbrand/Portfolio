@@ -345,6 +345,28 @@
   .ps4-nav-item__circle {
     width: 42px;
     height: 42px;
+    /* Perf mobile : le blur derrière chaque pastille est recomposé à
+       chaque frame du canvas — fond uni à la place, visuel quasi égal. */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background:
+      radial-gradient(circle at 50% 26%, rgba(120, 200, 255, 0.24), rgba(2, 13, 38, 0.5) 72%),
+      rgba(6, 22, 52, 0.92);
+  }
+  /* Perf mobile : on fige les animations infinies du header (halo,
+     reflet, lueur d'arc) qui occupent le GPU même sans interaction. */
+  .ps4-header__ambience,
+  .ps4-header__arc {
+    animation: none;
+  }
+  .ps4-nav-item.is-focused .ps4-nav-item__circle,
+  .ps4-nav-item:focus-visible .ps4-nav-item__circle {
+    animation: none;
+  }
+  .ps4-nav-item.is-focused .ps4-nav-item__shine,
+  .ps4-nav-item:focus-visible .ps4-nav-item__shine {
+    animation: none;
+    opacity: 0;
   }
   .ps4-nav-item.is-focused .ps4-nav-item__circle,
   .ps4-nav-item:focus-visible .ps4-nav-item__circle {

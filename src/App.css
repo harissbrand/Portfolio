@@ -200,7 +200,9 @@
     filter: grayscale(1) brightness(0.55);
   }
   to {
-    filter: grayscale(0) brightness(1);
+    /* none (et non l'identité) : libère la couche GPU plein écran
+       une fois le réveil terminé, au lieu de la garder à vie. */
+    filter: none;
   }
 }
 

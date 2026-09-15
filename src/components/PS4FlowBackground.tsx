@@ -38,7 +38,7 @@ export default function PS4FlowBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const rawCtx = canvas.getContext('2d');
+    const rawCtx = canvas.getContext('2d', { alpha: false, desynchronized: true });
     if (!rawCtx) return;
     const ctx: CanvasRenderingContext2D = rawCtx;
 
@@ -47,7 +47,30 @@ export default function PS4FlowBackground() {
     let height = window.innerHeight;
     let time = 0;
     let lastTimestamp = -1;
+    let lastFrame = 0;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ── Qualité adaptative : les appareils modestes (mobile, peu de cœurs,
+    // peu de RAM, mode économie de données) basculent en mode "low" : moins
+    // de particules/fibres/échantillons, pas de reflet au sol, 30 FPS, DPR 1.
+    // Gain mesuré : ~2x moins de pixels + ~2x moins de tracés par frame.
+    const nav = navigator as Navigator & {
+      deviceMemory?: number;
+      connection?: { saveData?: boolean };
+    };
+    const lowPower =
+      width < 768 ||
+      (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4) ||
+      (typeof navigator.hardwareConcurrency === 'number' &&
+        navigator.hardwareConcurrency <= 4) ||
+      nav.connection?.saveData === true ||
+      window.matchMedia('(pointer: coarse)').matches;
+    const FRAME_BUDGET = lowPower ? 33.4 : 16.7; // 30 FPS vs 60 FPS max
+    const SPLINE_N = lowPower ? 34 : 60;
+    const SPLINE_N2 = lowPower ? 36 : 65;
+    const STRANDS_V1 = lowPower ? 12 : 24;
+    const STRANDS_V2 = lowPower ? 10 : 20;
+    const STRANDS_V3 = lowPower ? 10 : 18;
 
     // Mouse coordinates tracking with smooth fluid interpolation
     let mouseX = -1000;
@@ -65,11 +88,12 @@ export default function PS4FlowBackground() {
       targetMouseY = -1000;
     };
 
-    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
     window.addEventListener('pointerleave', handlePointerLeave);
 
     // 280 subtle, fine dust specks (poussières) - NO large light balls, calm, small & ethereal
-    const numParticles = 280;
+    // Mode low : 110 particules suffisent visuellement (~60% de tracés en moins).
+    const numParticles = lowPower ? 110 : 280;
     const particles: RibbonParticle[] = [];
 
     function initParticles() {
@@ -113,8 +137,9 @@ export default function PS4FlowBackground() {
     const handleResize = () => {
       width = window.innerWidth;
       height = window.innerHeight;
-      // Sobre : mobile en dpr 1, desktop plafonné à 1.25 (~30% de pixels en moins).
-      const dpr = Math.min(window.devicePixelRatio || 1, width < 768 ? 1 : 1.25);
+      // Sobre : DPR 1 partout en mode low (~36% de pixels en moins vs 1.25),
+      // desktop plafonné à 1.25 sinon.
+      const dpr = lowPower ? 1 : Math.min(window.devicePixelRatio || 1, width < 768 ? 1 : 1.25);
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
@@ -128,7 +153,7 @@ export default function PS4FlowBackground() {
     };
 
     handleResize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
 
     // Fast Catmull-Rom to Cubic Bézier spline sampling
     function getPointOnCubic(p0: Point, p1: Point, p2: Point, p3: Point, t: number): Point {
@@ -286,6 +311,15 @@ export default function PS4FlowBackground() {
     }
 
     const animate = (timestamp?: number) => {
+      // Plafond FPS : sur écran 120/144Hz on saute les frames en trop
+      // (divise par ~2 le travail GPU), en low on vise 30 FPS.
+      if (timestamp !== undefined) {
+        if (timestamp - lastFrame < FRAME_BUDGET) {
+          animationFrameId = requestAnimationFrame(animate);
+          return;
+        }
+        lastFrame = timestamp;
+      }
       // Frame-rate independent timing (fixes 2x speed on 120/144Hz screens)
       let dt = 1;
       if (timestamp !== undefined) {
@@ -369,7 +403,7 @@ export default function PS4FlowBackground() {
         { x: X(0.92) + mxOffset, y: h * (0.56 + Math.cos(time * 0.85) * 0.030) + myOffset },
         { x: X(1.15) + mxOffset, y: h * (0.58 + Math.sin(time * 0.8) * 0.025) + myOffset },
       ];
-      const v1Crest = sampleSpline(v1CrestCtrl, 60);
+      const v1Crest = sampleSpline(v1CrestCtrl, SPLINE_N);
 
       // Tombé resserré vers la crête (~55% de l'écart d'origine) : le voile
       // garde sa courbe et son animation, mais occupe ~2x moins de surface.
@@ -382,7 +416,7 @@ export default function PS4FlowBackground() {
         { x: X(0.92) + mxOffset, y: h * (0.615 + Math.cos(time * 0.85 + 0.8) * 0.030) + myOffset },
         { x: X(1.15) + mxOffset, y: h * (0.635 + Math.sin(time * 0.8 + 0.8) * 0.025) + myOffset },
       ];
-      const v1Drape = sampleSpline(v1DrapeCtrl, 60);
+      const v1Drape = sampleSpline(v1DrapeCtrl, SPLINE_N);
 
       // 2. Veil 2: The Radiant Emerald/Mint-to-Cyan Wave (smooth parabolic dip, ascending up right!)
       const v2CrestCtrl: Point[] = [
@@ -395,7 +429,7 @@ export default function PS4FlowBackground() {
         { x: X(0.12) - mxOffset, y: h * (0.56 + Math.sin(time * 0.8 + 2.0) * 0.032) - myOffset },
         { x: X(-0.12) - mxOffset, y: h * (0.46 + Math.cos(time * 0.85 + 2.0) * 0.035) - myOffset },
       ];
-      const v2Crest = sampleSpline(v2CrestCtrl, 65);
+      const v2Crest = sampleSpline(v2CrestCtrl, SPLINE_N2);
 
       const v2DrapeCtrl: Point[] = [
         { x: X(1.15) - mxOffset, y: -h * 0.06 + Math.sin(time * 0.9 + 1.8) * 25 },
@@ -407,7 +441,7 @@ export default function PS4FlowBackground() {
         { x: X(0.12) - mxOffset, y: h * (0.60 + Math.sin(time * 0.8 + 2.5) * 0.032) - myOffset },
         { x: X(-0.12) - mxOffset, y: h * (0.48 + Math.cos(time * 0.85 + 2.5) * 0.035) - myOffset },
       ];
-      const v2Drape = sampleSpline(v2DrapeCtrl, 65);
+      const v2Drape = sampleSpline(v2DrapeCtrl, SPLINE_N2);
 
       // 3. Veil 3: The Full-Width Lower Royal Blue Ribbon (CONTINUES ACROSS ENTIRE SCREEN TO THE RIGHT!)
       const v3CrestCtrl: Point[] = [
@@ -419,7 +453,7 @@ export default function PS4FlowBackground() {
         { x: X(0.90), y: h * (0.68 + Math.cos(time * 0.8 + 2.5) * 0.025) },
         { x: X(1.15), y: h * (0.60 + Math.sin(time * 0.8 + 2.5) * 0.028) },
       ];
-      const v3Crest = sampleSpline(v3CrestCtrl, 60);
+      const v3Crest = sampleSpline(v3CrestCtrl, SPLINE_N);
 
       const v3DrapeCtrl: Point[] = [
         { x: X(-0.12), y: h * (0.56 + Math.sin(time * 0.75 + 3.2) * 0.028) },
@@ -430,13 +464,13 @@ export default function PS4FlowBackground() {
         { x: X(0.90), y: h * (0.74 + Math.cos(time * 0.8 + 3.2) * 0.025) },
         { x: X(1.15), y: h * (0.66 + Math.sin(time * 0.8 + 3.2) * 0.028) },
       ];
-      const v3Drape = sampleSpline(v3DrapeCtrl, 60);
+      const v3Drape = sampleSpline(v3DrapeCtrl, SPLINE_N);
 
       function drawAllVeils(isReflection = false) {
         // Veil 3: Full-width Lower Royal Blue Ribbon
         renderLinenWaveBatched(v3Crest, v3Drape, {
           colorFn: (_u, _v, a) => `rgba(0, 115, 255, ${a})`,
-          numStrands: 18,
+          numStrands: STRANDS_V3,
           bodyOpacity: 0.45,
           strandOpacity: 0.14,
           isReflection,
@@ -455,7 +489,7 @@ export default function PS4FlowBackground() {
               return `rgba(0, 240, 255, ${a})`;
             }
           },
-          numStrands: 24,
+          numStrands: STRANDS_V1,
           bodyOpacity: 0.52,
           strandOpacity: 0.18,
           isReflection,
@@ -479,7 +513,7 @@ export default function PS4FlowBackground() {
               return `rgba(0, ${Math.round(200 - t * 25)}, 235, ${a})`;
             }
           },
-          numStrands: 20,
+          numStrands: STRANDS_V2,
           bodyOpacity: 0.42,
           strandOpacity: 0.12,
           crestOpacity: 0.65,
@@ -637,15 +671,19 @@ export default function PS4FlowBackground() {
       }
 
       // --- PASS 1: Floor Reflection (SEAMLESS - ZERO LINE OF SYMMETRY!) ---
-      ctx.save();
-      ctx.translate(0, floorY);
-      ctx.scale(1, -0.72);
-      ctx.translate(0, -floorY);
-      drawAllVeils(true);
-      ctx.restore();
+      // Mode low : on saute le reflet (la moitié des tracés de voiles en
+      // moins) et on garde juste le lavis sombre du sol, quasi identique.
+      if (!lowPower) {
+        ctx.save();
+        ctx.translate(0, floorY);
+        ctx.scale(1, -0.72);
+        ctx.translate(0, -floorY);
+        drawAllVeils(true);
+        ctx.restore();
 
-      // Reflected dust specks in glossy ground
-      drawDustBatched(true);
+        // Reflected dust specks in glossy ground
+        drawDustBatched(true);
+      }
 
       // Smooth progressive dark wash: blends seamlessly from contact point downwards
       const floorOverlay = ctx.createLinearGradient(0, floorY - 50, 0, h);

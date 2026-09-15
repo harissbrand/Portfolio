@@ -414,6 +414,7 @@
   .contact__socials {
     justify-content: center;
     flex-wrap: wrap;
+    -webkit-box-reflect: none;
   }
 
   .contact__direct {
@@ -432,6 +433,11 @@
 
   .contact__form {
     margin: 0 auto;
+    /* Perf mobile : pas de blur recomposé sur le canvas animé. */
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(3, 12, 34, 0.94);
+    -webkit-box-reflect: none;
   }
 }
 
